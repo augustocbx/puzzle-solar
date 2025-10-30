@@ -305,17 +305,43 @@ body {
     justify-content: center;
     cursor: grab;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(255, 215, 0, 0);
     position: relative;
+    animation: float-planeta 3s ease-in-out infinite;
+}
+
+@keyframes float-planeta {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.planeta::before {
+    content: '👆';
+    position: absolute;
+    top: -30px;
+    font-size: 1.5em;
+    animation: bounce-indicator 1s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+@keyframes bounce-indicator {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 .planeta:active {
     cursor: grabbing;
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 0 5px rgba(255, 215, 0, 0.5);
 }
 
 .planeta:hover {
-    transform: scale(1.05) rotate(5deg);
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 0 4px rgba(255, 215, 0, 0.3);
+}
+
+.planeta:hover::before {
+    opacity: 0;
 }
 
 .planeta-emoji {
@@ -345,14 +371,14 @@ body {
     width: 100%;
     min-height: 600px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 20px;
 }
 
 .sol {
-    font-size: 4em;
-    position: absolute;
-    z-index: 10;
+    font-size: 5em;
+    margin-bottom: 30px;
     animation: rotate 20s linear infinite, pulse-sol 2s ease-in-out infinite;
     filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
 }
@@ -368,44 +394,66 @@ body {
 }
 
 .orbitas-container {
-    position: relative;
     width: 100%;
-    height: 600px;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.orbita {
-    position: absolute;
-    border: 2px dashed rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Wrapper de cada slot */
+.slot-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
     transition: all 0.3s ease;
 }
 
-.orbita:hover {
-    border-color: rgba(255, 215, 0, 0.6);
-    border-style: solid;
+.slot-wrapper:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
 }
 
-/* Tamanhos progressivos das órbitas */
-.orbita.orbita-1 { width: 80px; height: 80px; }
-.orbita.orbita-2 { width: 120px; height: 120px; }
-.orbita.orbita-3 { width: 160px; height: 160px; }
-.orbita.orbita-4 { width: 200px; height: 200px; }
-.orbita.orbita-5 { width: 280px; height: 280px; }
-.orbita.orbita-6 { width: 360px; height: 360px; }
-.orbita.orbita-7 { width: 440px; height: 440px; }
-.orbita.orbita-8 { width: 520px; height: 520px; }
-
-.slot {
-    min-height: 80px;
-    min-width: 80px;
-    border: 3px dashed rgba(255, 255, 255, 0.5);
+/* Órbita visual decorativa */
+.orbita-visual {
+    width: 40px;
+    height: 40px;
+    border: 3px dashed rgba(255, 255, 255, 0.4);
     border-radius: 50%;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.slot-wrapper:hover .orbita-visual {
+    border-color: rgba(255, 215, 0, 0.6);
+    border-style: solid;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Cores das órbitas */
+.orbita-visual.orbita-1 { border-color: rgba(150, 150, 150, 0.5); }
+.orbita-visual.orbita-2 { border-color: rgba(255, 166, 77, 0.5); }
+.orbita-visual.orbita-3 { border-color: rgba(77, 148, 255, 0.5); }
+.orbita-visual.orbita-4 { border-color: rgba(255, 107, 107, 0.5); }
+.orbita-visual.orbita-5 { border-color: rgba(255, 179, 102, 0.5); }
+.orbita-visual.orbita-6 { border-color: rgba(244, 228, 166, 0.5); }
+.orbita-visual.orbita-7 { border-color: rgba(124, 179, 217, 0.5); }
+.orbita-visual.orbita-8 { border-color: rgba(74, 111, 165, 0.5); }
+
+/* Slot principal */
+.slot {
+    flex: 1;
+    min-height: 100px;
+    border: 3px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -413,56 +461,86 @@ body {
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.05);
     cursor: pointer;
+    padding: 10px;
+}
+
+.slot-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    pointer-events: none;
+}
+
+.slot-numero {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffd93d;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 15px;
+    border-radius: 10px;
+}
+
+.slot-placeholder {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.6);
+    animation: pulse-placeholder 2s ease-in-out infinite;
+}
+
+@keyframes pulse-placeholder {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+.slot:hover {
+    border-color: rgba(255, 215, 0, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
 }
 
 .slot.drag-over {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 215, 0, 0.2);
     border-color: #ffd93d;
-    transform: scale(1.2);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    border-style: solid;
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
 }
 
 .slot.correto {
     border-color: #4caf50;
-    background: rgba(76, 175, 80, 0.3);
-    animation: pulse-correto 0.6s ease;
     border-style: solid;
+    background: rgba(76, 175, 80, 0.2);
+    animation: pulse-correto 0.6s ease;
 }
 
 .slot.incorreto {
     border-color: #f44336;
-    background: rgba(244, 67, 54, 0.3);
+    border-style: solid;
+    background: rgba(244, 67, 54, 0.2);
     animation: shake 0.5s ease;
 }
 
 @keyframes pulse-correto {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); }
+    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); }
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    25% { transform: translateX(-10px) rotate(-5deg); }
-    75% { transform: translateX(10px) rotate(5deg); }
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
 }
 
-.slot-numero {
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1em;
-    font-weight: bold;
-    color: #ffd93d;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 3px 10px;
-    border-radius: 10px;
-}
-
+/* Planeta dentro do slot */
 .slot .planeta {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     cursor: move;
+    position: relative;
+}
+
+.slot:has(.planeta) .slot-info {
+    display: none;
 }
 
 .slot .planeta:hover {
@@ -813,11 +891,22 @@ body {
 }
 
 /* Responsividade */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
     .area-jogo {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
 
+    .area-slots {
+        order: 1;
+    }
+
+    .area-planetas {
+        order: 2;
+    }
+}
+
+@media (max-width: 768px) {
     .titulo-principal {
         font-size: 2em;
     }
@@ -830,14 +919,37 @@ body {
     .info-jogo {
         flex-direction: column;
         gap: 10px;
+        width: 100%;
+    }
+
+    .challenge-atual, .cronometro, .tentativas, .pontos {
+        font-size: 1em;
+        padding: 8px 15px;
     }
 
     .planeta {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
     }
 
     .planeta-emoji {
-        font-size: 2.5em;
+        font-size: 2em;
+    }
+
+    .sol {
+        font-size: 3em;
+    }
+
+    .slot .planeta {
+        width: 60px;
+        height: 60px;
+    }
+
+    .slot {
+        min-height: 80px;
+    }
+
+    .slot-numero {
+        font-size: 1.2em;
     }
 }

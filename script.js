@@ -156,41 +156,46 @@ function criarPlanetas() {
             <span class="planeta-nome">${planeta.nome}</span>
         `;
 
-        // Eventos de arrastar
+        // Eventos de arrastar (desktop)
         div.addEventListener('dragstart', arrastarInicio);
         div.addEventListener('dragend', arrastarFim);
+
+        // Eventos de touch (mobile)
+        div.addEventListener('touchstart', touchInicio, { passive: false });
+        div.addEventListener('touchmove', touchMover, { passive: false });
+        div.addEventListener('touchend', touchFim, { passive: false });
 
         container.appendChild(div);
     });
 }
 
-// Criar Slots com Órbitas
+// Criar Slots com Órbitas em Layout Vertical
 function criarSlots() {
     const container = document.getElementById('orbitasContainer');
     container.innerHTML = '';
 
-    // Ângulos para posicionar os planetas em círculo
-    const angulos = [0, 45, 90, 135, 180, 225, 270, 315];
-
     for (let i = 0; i < 8; i++) {
-        const orbita = document.createElement('div');
-        orbita.className = `orbita orbita-${i + 1}`;
+        // Container do slot
+        const slotWrapper = document.createElement('div');
+        slotWrapper.className = 'slot-wrapper';
 
+        // Órbita visual (círculo de fundo)
+        const orbita = document.createElement('div');
+        orbita.className = `orbita-visual orbita-${i + 1}`;
+
+        // Slot para o planeta
         const slot = document.createElement('div');
         slot.className = 'slot';
         slot.dataset.posicao = i + 1;
-        slot.innerHTML = `<span class="slot-numero">${i + 1}º</span>`;
 
-        // Posicionar slot no topo da órbita
-        const angulo = angulos[i] * (Math.PI / 180);
-        const raio = (40 + (i * 35)); // Raio progressivo
-        const x = Math.cos(angulo) * raio;
-        const y = Math.sin(angulo) * raio;
+        const slotInfo = document.createElement('div');
+        slotInfo.className = 'slot-info';
+        slotInfo.innerHTML = `
+            <span class="slot-numero">${i + 1}º</span>
+            <span class="slot-placeholder">Arraste aqui</span>
+        `;
 
-        slot.style.position = 'absolute';
-        slot.style.left = `calc(50% + ${x}px)`;
-        slot.style.top = `calc(50% + ${y}px)`;
-        slot.style.transform = 'translate(-50%, -50%)';
+        slot.appendChild(slotInfo);
 
         // Eventos de drop
         slot.addEventListener('dragover', arrastarSobre);
@@ -198,8 +203,9 @@ function criarSlots() {
         slot.addEventListener('drop', soltar);
         slot.addEventListener('click', removerPlanetaDoSlot);
 
-        orbita.appendChild(slot);
-        container.appendChild(orbita);
+        slotWrapper.appendChild(orbita);
+        slotWrapper.appendChild(slot);
+        container.appendChild(slotWrapper);
     }
 }
 
@@ -243,24 +249,21 @@ function soltar(e) {
     // Se o slot já está ocupado, devolver o planeta antigo para a área de planetas
     const planetaExistente = slot.querySelector('.planeta');
     if (planetaExistente) {
-        const containerPlanetas = document.getElementById('planetasContainer');
-        containerPlanetas.appendChild(planetaExistente);
-        planetaExistente.style.position = 'relative';
-        planetaExistente.style.left = 'auto';
-        planetaExistente.style.top = 'auto';
-        planetaExistente.style.transform = 'none';
+        devolverPlaneta(planetaExistente);
     }
 
     const posicao = parseInt(slot.dataset.posicao);
     const planetaId = parseInt(planetaArrastado.dataset.planetaId);
 
     // Mover planeta para o slot
+    const slotInfo = slot.querySelector('.slot-info');
+    if (slotInfo) {
+        slotInfo.style.display = 'none';
+    }
+
     slot.appendChild(planetaArrastado);
     planetaArrastado.style.opacity = '1';
-    planetaArrastado.style.position = 'relative';
-    planetaArrastado.style.left = 'auto';
-    planetaArrastado.style.top = 'auto';
-    planetaArrastado.style.transform = 'none';
+    planetaArrastado.draggable = true;
 
     // Registrar no array
     slotsPreenchidos[posicao - 1] = planetaId;
@@ -286,7 +289,7 @@ function soltar(e) {
     } else {
         slot.classList.add('incorreto');
         erros++;
-        pontos = Math.max(0, pontos - 20); // Perde 20 pontos, mas não fica negativo
+        pontos = Math.max(0, pontos - 20);
         document.getElementById('tentativas').textContent = `❌ Erros: ${erros}`;
         document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
         setTimeout(() => slot.classList.remove('incorreto'), 500);
@@ -296,6 +299,12 @@ function soltar(e) {
 
     // Verificar vitória
     verificarVitoria();
+}
+
+// Função auxiliar para devolver planeta
+function devolverPlaneta(planeta) {
+    const containerPlanetas = document.getElementById('planetasContainer');
+    containerPlanetas.appendChild(planeta);
 }
 
 // Mostrar Mensagem Motivacional
@@ -353,8 +362,11 @@ function atualizarProgresso() {
     document.getElementById('progressoPreenchimento').style.width = `${percentual}%`;
 }
 
-// Remover Planeta do Slot (clique no slot vazio)
+// Remover Planeta do Slot (clique no slot)
 function removerPlanetaDoSlot(e) {
+    // Só remover se clicar no slot, não no planeta
+    if (e.target.closest('.planeta')) return;
+
     const slot = e.target.closest('.slot');
     if (!slot) return;
 
@@ -362,12 +374,13 @@ function removerPlanetaDoSlot(e) {
     if (!planeta) return;
 
     // Devolver para a área de planetas
-    const containerPlanetas = document.getElementById('planetasContainer');
-    containerPlanetas.appendChild(planeta);
-    planeta.style.position = 'relative';
-    planeta.style.left = 'auto';
-    planeta.style.top = 'auto';
-    planeta.style.transform = 'none';
+    devolverPlaneta(planeta);
+
+    // Mostrar novamente o slot-info
+    const slotInfo = slot.querySelector('.slot-info');
+    if (slotInfo) {
+        slotInfo.style.display = 'flex';
+    }
 
     // Limpar o registro
     const posicao = parseInt(slot.dataset.posicao);
@@ -707,6 +720,118 @@ function mostrarChallenges() {
 
 function jogarNovamente() {
     iniciarJogo(challengeAtual);
+}
+
+// Suporte a Touch (Mobile)
+let touchPlaneta = null;
+let touchClone = null;
+
+function touchInicio(e) {
+    e.preventDefault();
+    touchPlaneta = e.target.closest('.planeta');
+    if (!touchPlaneta) return;
+
+    // Criar clone visual
+    touchClone = touchPlaneta.cloneNode(true);
+    touchClone.style.position = 'fixed';
+    touchClone.style.zIndex = '10000';
+    touchClone.style.pointerEvents = 'none';
+    touchClone.style.opacity = '0.8';
+    touchClone.style.transform = 'scale(1.1)';
+    document.body.appendChild(touchClone);
+
+    const touch = e.touches[0];
+    touchClone.style.left = (touch.clientX - 50) + 'px';
+    touchClone.style.top = (touch.clientY - 50) + 'px';
+
+    touchPlaneta.style.opacity = '0.3';
+}
+
+function touchMover(e) {
+    e.preventDefault();
+    if (!touchClone) return;
+
+    const touch = e.touches[0];
+    touchClone.style.left = (touch.clientX - 50) + 'px';
+    touchClone.style.top = (touch.clientY - 50) + 'px';
+
+    // Detectar slot sob o dedo
+    const elementoSob = document.elementFromPoint(touch.clientX, touch.clientY);
+    const slotSob = elementoSob ? elementoSob.closest('.slot') : null;
+
+    // Remover highlight de todos os slots
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+
+    // Adicionar highlight ao slot atual
+    if (slotSob) {
+        slotSob.classList.add('drag-over');
+    }
+}
+
+function touchFim(e) {
+    e.preventDefault();
+    if (!touchPlaneta || !touchClone) return;
+
+    const touch = e.changedTouches[0];
+    const elementoSob = document.elementFromPoint(touch.clientX, touch.clientY);
+    const slotSob = elementoSob ? elementoSob.closest('.slot') : null;
+
+    if (slotSob) {
+        // Simular drop
+        const planetaExistente = slotSob.querySelector('.planeta');
+        if (planetaExistente) {
+            devolverPlaneta(planetaExistente);
+        }
+
+        const posicao = parseInt(slotSob.dataset.posicao);
+        const planetaId = parseInt(touchPlaneta.dataset.planetaId);
+
+        // Mover planeta para o slot
+        const slotInfo = slotSob.querySelector('.slot-info');
+        if (slotInfo) {
+            slotInfo.style.display = 'none';
+        }
+
+        slotSob.appendChild(touchPlaneta);
+        touchPlaneta.style.opacity = '1';
+
+        // Registrar no array
+        slotsPreenchidos[posicao - 1] = planetaId;
+
+        // Verificar se está correto
+        if (planetaId === posicao) {
+            slotSob.classList.add('correto');
+            setTimeout(() => slotSob.classList.remove('correto'), 500);
+
+            acertos++;
+            pontos += 100;
+            document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+
+            mostrarMensagemMotivacional();
+            criarParticulas(slotSob);
+            atualizarProgresso();
+        } else {
+            slotSob.classList.add('incorreto');
+            erros++;
+            pontos = Math.max(0, pontos - 20);
+            document.getElementById('tentativas').textContent = `❌ Erros: ${erros}`;
+            document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+            setTimeout(() => slotSob.classList.remove('incorreto'), 500);
+        }
+
+        verificarVitoria();
+    } else {
+        // Devolver ao container original
+        touchPlaneta.style.opacity = '1';
+    }
+
+    // Limpar
+    if (touchClone && touchClone.parentNode) {
+        document.body.removeChild(touchClone);
+    }
+    document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+    touchPlaneta = null;
+    touchClone = null;
 }
 
 // Inicialização
