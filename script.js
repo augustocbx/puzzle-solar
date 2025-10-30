@@ -1,13 +1,13 @@
 // Dados dos Planetas
 const planetas = [
-    { id: 1, nome: 'Mercúrio', emoji: '☿️', classe: 'mercurio' },
-    { id: 2, nome: 'Vênus', emoji: '♀', classe: 'venus' },
-    { id: 3, nome: 'Terra', emoji: '🌍', classe: 'terra' },
-    { id: 4, nome: 'Marte', emoji: '♂', classe: 'marte' },
-    { id: 5, nome: 'Júpiter', emoji: '♃', classe: 'jupiter' },
-    { id: 6, nome: 'Saturno', emoji: '♄', classe: 'saturno' },
-    { id: 7, nome: 'Urano', emoji: '♅', classe: 'urano' },
-    { id: 8, nome: 'Netuno', emoji: '♆', classe: 'netuno' }
+    { id: 1, nome: 'Mercúrio', classe: 'mercurio', tamanho: 'pequeno' },
+    { id: 2, nome: 'Vênus', classe: 'venus', tamanho: 'pequeno' },
+    { id: 3, nome: 'Terra', classe: 'terra', tamanho: 'pequeno' },
+    { id: 4, nome: 'Marte', classe: 'marte', tamanho: 'pequeno' },
+    { id: 5, nome: 'Júpiter', classe: 'jupiter', tamanho: 'grande' },
+    { id: 6, nome: 'Saturno', classe: 'saturno', tamanho: 'grande' },
+    { id: 7, nome: 'Urano', classe: 'urano', tamanho: 'medio' },
+    { id: 8, nome: 'Netuno', classe: 'netuno', tamanho: 'medio' }
 ];
 
 // Definição dos Challenges
@@ -148,11 +148,25 @@ function criarPlanetas() {
 
     planetasEmbaralhados.forEach((planeta, index) => {
         const div = document.createElement('div');
-        div.className = `planeta ${planeta.classe}`;
+        div.className = `planeta ${planeta.classe} ${planeta.tamanho}`;
         div.draggable = true;
         div.dataset.planetaId = planeta.id;
+
+        // Criar representação visual do planeta
+        let planetaVisual = '';
+        if (planeta.classe === 'saturno') {
+            planetaVisual = `
+                <div class="planeta-esfera ${planeta.classe}-esfera"></div>
+                <div class="anel-saturno"></div>
+            `;
+        } else {
+            planetaVisual = `<div class="planeta-esfera ${planeta.classe}-esfera"></div>`;
+        }
+
         div.innerHTML = `
-            <span class="planeta-emoji">${planeta.emoji}</span>
+            <div class="planeta-visual">
+                ${planetaVisual}
+            </div>
             <span class="planeta-nome">${planeta.nome}</span>
         `;
 
