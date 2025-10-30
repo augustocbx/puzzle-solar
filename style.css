@@ -2474,7 +2474,7 @@ body {
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
 }
 
-#telaJogo.ativa ~ #qr-toggle-btn {
+body:has(#telaJogo.ativa) #qr-toggle-btn {
     display: none !important;
 }
 
