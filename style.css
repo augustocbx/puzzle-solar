@@ -393,20 +393,21 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Sistema Solar com Órbitas */
+/* Sistema Solar com Órbitas Circulares */
 .sistema-solar {
     position: relative;
-    width: 100%;
-    min-height: 600px;
+    width: 700px;
+    height: 700px;
+    margin: 0 auto;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
 }
 
 .sol {
-    font-size: 5em;
-    margin-bottom: 30px;
+    position: absolute;
+    font-size: 4em;
+    z-index: 100;
     animation: pulse-sol 3s ease-in-out infinite;
     filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
 }
@@ -423,102 +424,61 @@ body {
 }
 
 .orbitas-container {
+    position: relative;
     width: 100%;
-    max-width: 700px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    height: 100%;
 }
 
-/* Wrapper de cada slot */
-.slot-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    transition: all 0.3s ease;
-}
-
-.slot-wrapper:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateX(5px);
-}
-
-/* Órbita visual decorativa */
-.orbita-visual {
-    width: 40px;
-    height: 40px;
-    border: 3px dashed rgba(255, 255, 255, 0.4);
+/* Órbitas circulares */
+.orbita {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    flex-shrink: 0;
-    transition: all 0.3s ease;
+    transition: border-color 0.3s ease;
 }
 
-.slot-wrapper:hover .orbita-visual {
-    border-color: rgba(255, 215, 0, 0.6);
+.orbita:hover {
+    border-color: rgba(255, 215, 0, 0.5);
     border-style: solid;
-    animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-/* Cores das órbitas */
-.orbita-visual.orbita-1 { border-color: rgba(150, 150, 150, 0.5); }
-.orbita-visual.orbita-2 { border-color: rgba(255, 166, 77, 0.5); }
-.orbita-visual.orbita-3 { border-color: rgba(77, 148, 255, 0.5); }
-.orbita-visual.orbita-4 { border-color: rgba(255, 107, 107, 0.5); }
-.orbita-visual.orbita-5 { border-color: rgba(255, 179, 102, 0.5); }
-.orbita-visual.orbita-6 { border-color: rgba(244, 228, 166, 0.5); }
-.orbita-visual.orbita-7 { border-color: rgba(124, 179, 217, 0.5); }
-.orbita-visual.orbita-8 { border-color: rgba(74, 111, 165, 0.5); }
-
-/* Slot principal */
+/* Slot do planeta - posicionado no topo da órbita */
 .slot {
-    flex: 1;
-    min-height: 100px;
-    border: 3px dashed rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    min-height: 90px;
+    border: 3px dashed rgba(255, 255, 255, 0.6);
     border-radius: 15px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    cursor: pointer;
-    padding: 10px;
-}
-
-.slot-info {
-    display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 5px;
-    pointer-events: none;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 8px;
 }
 
 .slot-numero {
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
     color: #ffd93d;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 5px 15px;
-    border-radius: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
-.slot-placeholder {
-    font-size: 0.9em;
-    color: rgba(255, 255, 255, 0.6);
-    animation: pulse-placeholder 2s ease-in-out infinite;
-}
-
-@keyframes pulse-placeholder {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
+.slot-nome {
+    font-size: 0.85em;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .slot:hover {
@@ -566,39 +526,41 @@ body {
     height: auto;
     cursor: move;
     position: relative;
+    margin: 0;
 }
 
 .slot .planeta .planeta-visual {
-    width: 60px;
-    height: 60px;
-}
-
-.slot .planeta.pequeno .planeta-visual {
-    width: 45px;
-    height: 45px;
-}
-
-.slot .planeta.medio .planeta-visual {
     width: 55px;
     height: 55px;
 }
 
+.slot .planeta.pequeno .planeta-visual {
+    width: 40px;
+    height: 40px;
+}
+
+.slot .planeta.medio .planeta-visual {
+    width: 50px;
+    height: 50px;
+}
+
 .slot .planeta.grande .planeta-visual {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
 }
 
 .slot .planeta.saturno .planeta-visual {
+    width: 80px;
+    height: 55px;
+}
+
+.slot .planeta.grande.saturno .planeta-visual {
     width: 90px;
     height: 60px;
 }
 
-.slot .planeta.grande.saturno .planeta-visual {
-    width: 100px;
-    height: 70px;
-}
-
-.slot:has(.planeta) .slot-info {
+.slot:has(.planeta) .slot-numero,
+.slot:has(.planeta) .slot-nome {
     display: none;
 }
 
@@ -612,6 +574,11 @@ body {
 
 .slot .planeta {
     animation: none;
+}
+
+.slot .planeta .planeta-nome {
+    font-size: 0.75em;
+    margin-top: 3px;
 }
 
 /* Modal de Vitória */
@@ -971,6 +938,36 @@ body {
     .area-planetas {
         order: 2;
     }
+
+    .sistema-solar {
+        width: 600px;
+        height: 600px;
+    }
+}
+
+@media (max-width: 900px) {
+    .sistema-solar {
+        width: 500px;
+        height: 500px;
+    }
+
+    .sol {
+        font-size: 3em;
+    }
+
+    .slot {
+        width: 90px;
+        min-height: 75px;
+        top: -40px;
+    }
+
+    .slot-numero {
+        font-size: 1em;
+    }
+
+    .slot-nome {
+        font-size: 0.75em;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1029,25 +1026,47 @@ body {
         height: 70px !important;
     }
 
+    .sistema-solar {
+        width: 400px;
+        height: 400px;
+    }
+
     .sol {
-        font-size: 3em;
-    }
-
-    .slot .planeta .planeta-visual {
-        width: 50px !important;
-        height: 50px !important;
-    }
-
-    .slot .planeta.saturno .planeta-visual {
-        width: 75px !important;
-        height: 50px !important;
+        font-size: 2.5em;
     }
 
     .slot {
-        min-height: 80px;
+        width: 75px;
+        min-height: 65px;
+        top: -35px;
+    }
+
+    .slot .planeta .planeta-visual {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    .slot .planeta.saturno .planeta-visual {
+        width: 60px !important;
+        height: 40px !important;
     }
 
     .slot-numero {
-        font-size: 1.2em;
+        font-size: 0.9em;
+    }
+
+    .slot-nome {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 500px) {
+    .sistema-solar {
+        width: 350px;
+        height: 350px;
+    }
+
+    .area-slots h3 {
+        font-size: 1.3em;
     }
 }
