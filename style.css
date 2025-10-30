@@ -307,6 +307,7 @@ body {
     transition: all 0.3s ease;
     position: relative;
     animation: float-planeta 3s ease-in-out infinite;
+    overflow: visible;
 }
 
 @keyframes float-planeta {
@@ -347,6 +348,7 @@ body {
     width: 70px;
     height: 70px;
     margin-bottom: 8px;
+    overflow: visible;
 }
 
 .planeta-esfera {
@@ -433,19 +435,42 @@ body {
 
 .saturno-esfera {
     background: radial-gradient(circle at 30% 30%, #f5deb3, #c9a561);
+    z-index: 2;
 }
 
 .anel-saturno {
     position: absolute;
-    width: 110%;
-    height: 40%;
-    top: 30%;
-    left: -5%;
-    border: 4px solid #e6d5a0;
+    width: 120%;
+    height: 30%;
+    top: 35%;
+    left: -10%;
+    background: linear-gradient(
+        to bottom,
+        transparent 30%,
+        rgba(230, 213, 160, 0.7) 35%,
+        rgba(201, 165, 97, 0.8) 50%,
+        rgba(230, 213, 160, 0.7) 65%,
+        transparent 70%
+    );
     border-radius: 50%;
-    transform: rotateX(75deg);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    z-index: -1;
+    transform: perspective(100px) rotateX(75deg);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.anel-saturno::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 35%,
+        rgba(230, 213, 160, 0.9) 40%,
+        rgba(201, 165, 97, 0.6) 50%,
+        transparent 55%
+    );
+    border-radius: 50%;
 }
 
 .urano-esfera {
