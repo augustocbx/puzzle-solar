@@ -1229,6 +1229,8 @@ body {
 
     .area-slots {
         order: 1;
+        overflow: auto;
+        max-height: 90vh;
     }
 
     .area-planetas {
@@ -1236,19 +1238,19 @@ body {
     }
 
     .sistema-solar {
-        width: 600px;
-        height: 600px;
+        width: 700px;
+        height: 700px;
     }
 }
 
 @media (max-width: 900px) {
     .sistema-solar {
-        width: 500px;
-        height: 500px;
+        width: 650px;
+        height: 650px;
     }
 
     .sol {
-        font-size: 3em;
+        font-size: 3.5em;
     }
 
     .slot {
@@ -1327,17 +1329,17 @@ body {
     }
 
     .sistema-solar {
-        width: 400px;
-        height: 400px;
+        width: 650px;
+        height: 650px;
     }
 
     .sol {
-        font-size: 2.5em;
+        font-size: 3em;
     }
 
     .slot {
-        width: 75px;
-        height: 75px;
+        width: 80px;
+        height: 80px;
     }
 
     .slot .planeta .planeta-visual {
@@ -1361,12 +1363,21 @@ body {
 
 @media (max-width: 500px) {
     .sistema-solar {
-        width: 350px;
-        height: 350px;
+        width: 600px;
+        height: 600px;
     }
 
     .area-slots h3 {
         font-size: 1.3em;
+    }
+
+    .slot {
+        width: 70px;
+        height: 70px;
+    }
+
+    .sol {
+        font-size: 2.5em;
     }
 }
 

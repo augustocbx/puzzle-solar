@@ -411,8 +411,14 @@ function criarSlots() {
     const container = document.getElementById('orbitasContainer');
     container.innerHTML = '';
 
-    // Raios das órbitas (do Sol para fora)
-    const raios = [60, 90, 120, 150, 190, 230, 270, 310];
+    // Detectar tamanho do sistema solar e calcular raios proporcionalmente
+    const sistemaSolar = document.querySelector('.sistema-solar');
+    const tamanhoSistema = sistemaSolar ? sistemaSolar.offsetWidth : 800;
+    const fatorEscala = tamanhoSistema / 800; // 800 é o tamanho base
+
+    // Raios das órbitas (do Sol para fora) - ajustados dinamicamente
+    const raiosBase = [60, 90, 120, 150, 190, 230, 270, 310];
+    const raios = raiosBase.map(r => Math.round(r * fatorEscala));
 
     // Ângulos iniciais variados para cada órbita (em graus)
     const angulosIniciais = [0, 45, 120, 200, 280, 330, 90, 170];
