@@ -83,7 +83,7 @@ body {
     font-size: 4em;
     font-weight: 800;
     margin-bottom: 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #3b82f6 100%);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -123,9 +123,9 @@ body {
 }
 
 .btn-principal {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
     color: white;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4),
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4),
                 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
@@ -156,7 +156,7 @@ body {
 }
 
 .btn-secundario {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
     color: white;
     box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4),
                 0 1px 3px rgba(0, 0, 0, 0.12);
@@ -336,11 +336,11 @@ body {
 }
 
 .challenge-atual {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
 }
 
 .cronometro {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #0891b2 100%);
 }
 
 .tentativas {
@@ -843,7 +843,7 @@ body {
     font-size: 3.5em;
     font-weight: 800;
     margin-bottom: 15px;
-    background: linear-gradient(135deg, #ffd93d 0%, #ff6ec7 50%, #667eea 100%);
+    background: linear-gradient(135deg, #ffd93d 0%, #14b8a6 50%, #0ea5e9 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -929,15 +929,15 @@ body {
     position: absolute;
     width: 10px;
     height: 10px;
-    background: linear-gradient(135deg, #ffd93d, #ff6ec7);
+    background: linear-gradient(135deg, #ffd93d, #14b8a6);
     border-radius: 50%;
     box-shadow:
-        20px 30px 0 #667eea,
-        -20px 50px 0 #f093fb,
+        20px 30px 0 #0ea5e9,
+        -20px 50px 0 #3b82f6,
         40px 70px 0 #ffd93d,
-        -40px 90px 0 #764ba2,
-        60px 110px 0 #ff6ec7,
-        -60px 130px 0 #667eea;
+        -40px 90px 0 #06b6d4,
+        60px 110px 0 #14b8a6,
+        -60px 130px 0 #0ea5e9;
     animation: confettiFall 4s ease-in-out infinite;
     opacity: 0.8;
 }
@@ -1014,8 +1014,8 @@ body {
 }
 
 .tab-btn.ativo {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+    border-color: #0ea5e9;
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
 }
 
@@ -1060,7 +1060,7 @@ body {
 }
 
 .btn-filtro.ativo {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
 }
 
 .lista-ranking {
@@ -1202,7 +1202,7 @@ body {
 }
 
 .challenge-status.desbloqueado {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
 }
 
 .challenge-status.bloqueado {
@@ -1464,7 +1464,7 @@ body {
 .detalhes-nome {
     font-size: 2.5em;
     font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1677,8 +1677,8 @@ body {
 }
 
 .btn-filtro-badge.ativo {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: #667eea;
+    background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%);
+    border-color: #0ea5e9;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
