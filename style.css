@@ -1424,6 +1424,10 @@ body {
         display: none;
     }
 
+    .area-slots {
+        padding-top: 5px;
+    }
+
     .planetas-container {
         min-height: auto;
         max-height: calc(90vh - 180px);
