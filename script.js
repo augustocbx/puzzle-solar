@@ -146,6 +146,48 @@ function criarPlanetas() {
     const container = document.getElementById('planetasContainer');
     container.innerHTML = '';
 
+    // Adicionar eventos de drop na área de planetas
+    container.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        container.classList.add('drag-over-area');
+    });
+
+    container.addEventListener('dragleave', () => {
+        container.classList.remove('drag-over-area');
+    });
+
+    container.addEventListener('drop', (e) => {
+        e.preventDefault();
+        container.classList.remove('drag-over-area');
+
+        if (!planetaArrastado) return;
+
+        // Se o planeta está vindo de um slot, removê-lo
+        if (slotOrigem) {
+            const posicaoOrigem = parseInt(slotOrigem.dataset.posicao);
+            const planetaIdOrigem = slotsPreenchidos[posicaoOrigem - 1];
+
+            // Se estava correto, descontar pontos e acertos
+            if (planetaIdOrigem === posicaoOrigem) {
+                acertos--;
+                pontos = Math.max(0, pontos - 50);
+                document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+            }
+
+            // Limpar o slot
+            slotsPreenchidos[posicaoOrigem - 1] = null;
+
+            // Devolver para a área de planetas
+            devolverPlaneta(planetaArrastado);
+
+            // Atualizar progresso
+            atualizarProgresso();
+
+            planetaArrastado = null;
+            slotOrigem = null;
+        }
+    });
+
     planetasEmbaralhados.forEach((planeta, index) => {
         const div = document.createElement('div');
         div.className = `planeta ${planeta.classe} ${planeta.tamanho}`;
@@ -222,16 +264,21 @@ function criarSlots() {
 
 // Sistema de Drag and Drop
 let planetaArrastado = null;
+let slotOrigem = null;
 
 function arrastarInicio(e) {
     planetaArrastado = e.target.closest('.planeta');
     planetaArrastado.style.opacity = '0.5';
+
+    // Verificar se o planeta está em um slot
+    slotOrigem = planetaArrastado.closest('.slot');
 }
 
 function arrastarFim(e) {
     if (planetaArrastado) {
         planetaArrastado.style.opacity = '1';
     }
+    slotOrigem = null;
 }
 
 function arrastarSobre(e) {
@@ -257,25 +304,61 @@ function soltar(e) {
 
     slot.classList.remove('drag-over');
 
-    // Se o slot já está ocupado, devolver o planeta antigo para a área de planetas
+    const posicaoDestino = parseInt(slot.dataset.posicao);
+    const planetaId = parseInt(planetaArrastado.dataset.planetaId);
+
+    // Limpar pontuação e acerto da posição de origem se o planeta estava correto
+    if (slotOrigem) {
+        const posicaoOrigem = parseInt(slotOrigem.dataset.posicao);
+        const planetaIdOrigem = slotsPreenchidos[posicaoOrigem - 1];
+        if (planetaIdOrigem === posicaoOrigem) {
+            acertos--;
+            pontos = Math.max(0, pontos - 100);
+        }
+        slotsPreenchidos[posicaoOrigem - 1] = null;
+    }
+
+    // Se o slot de destino já está ocupado E estamos vindo de outro slot, fazer SWAP
     const planetaExistente = slot.querySelector('.planeta');
-    if (planetaExistente) {
+    if (planetaExistente && slotOrigem) {
+        // SWAP: Trocar os planetas de lugar
+        const planetaIdDestino = parseInt(planetaExistente.dataset.planetaId);
+
+        // Limpar pontuação e acerto da posição de destino se o planeta estava correto
+        if (planetaIdDestino === posicaoDestino) {
+            acertos--;
+            pontos = Math.max(0, pontos - 100);
+        }
+
+        // Mover planeta existente para o slot de origem
+        slotOrigem.appendChild(planetaExistente);
+        const posicaoOrigem = parseInt(slotOrigem.dataset.posicao);
+        slotsPreenchidos[posicaoOrigem - 1] = planetaIdDestino;
+
+        // Verificar se o planeta movido para origem ficou correto
+        if (planetaIdDestino === posicaoOrigem) {
+            slotOrigem.classList.add('correto');
+            setTimeout(() => slotOrigem.classList.remove('correto'), 500);
+            acertos++;
+            pontos += 100;
+            mostrarMensagemMotivacional();
+            criarParticulas(slotOrigem);
+        }
+    } else if (planetaExistente) {
+        // Se estamos vindo da área de planetas, apenas devolver o existente
         devolverPlaneta(planetaExistente);
     }
 
-    const posicao = parseInt(slot.dataset.posicao);
-    const planetaId = parseInt(planetaArrastado.dataset.planetaId);
-
-    // Mover planeta para o slot
+    // Mover planeta arrastado para o slot de destino
     slot.appendChild(planetaArrastado);
     planetaArrastado.style.opacity = '1';
     planetaArrastado.draggable = true;
 
     // Registrar no array
-    slotsPreenchidos[posicao - 1] = planetaId;
+    slotsPreenchidos[posicaoDestino - 1] = planetaId;
 
     // Verificar se está correto
-    if (planetaId === posicao) {
+    if (planetaId === posicaoDestino) {
         slot.classList.add('correto');
         setTimeout(() => slot.classList.remove('correto'), 500);
 
@@ -301,7 +384,11 @@ function soltar(e) {
         setTimeout(() => slot.classList.remove('incorreto'), 500);
     }
 
+    // Atualizar pontos exibidos
+    document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+
     planetaArrastado = null;
+    slotOrigem = null;
 
     // Verificar vitória
     verificarVitoria();
@@ -400,6 +487,34 @@ function removerPlanetaDoSlot(e) {
     atualizarProgresso();
 }
 
+// Limpar todas as órbitas
+function limparOrbitas() {
+    const slots = document.querySelectorAll('.slot');
+
+    slots.forEach((slot, index) => {
+        const planeta = slot.querySelector('.planeta');
+        if (planeta) {
+            // Devolver para a área de planetas
+            devolverPlaneta(planeta);
+
+            // Se era correto, descontar pontos e acertos
+            const posicao = index + 1;
+            const planetaId = slotsPreenchidos[posicao - 1];
+            if (planetaId === posicao) {
+                acertos--;
+                pontos = Math.max(0, pontos - 50);
+            }
+        }
+    });
+
+    // Limpar todos os registros
+    slotsPreenchidos = new Array(8).fill(null);
+
+    // Atualizar interface
+    document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+    atualizarProgresso();
+}
+
 // Cronômetro
 function iniciarCronometro() {
     tempoInicio = Date.now();
@@ -453,13 +568,19 @@ function mostrarTelaVitoria(tempoFinal) {
     const segundos = tempoFinal % 60;
     const tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 
-    // Bônus de tempo: quanto mais rápido, mais pontos
-    const bonusTempo = Math.max(0, 300 - tempoFinal) * 5; // Max 1500 pontos se completar em 0s
+    // Pontos base por completar o jogo: 10.000 pontos
+    pontos = 10000;
+
+    // Bônus de tempo: quanto mais rápido, mais pontos (até 2000)
+    const bonusTempo = Math.max(0, Math.min(2000, Math.floor((300 - tempoFinal) * 10)));
     pontos += bonusTempo;
 
-    // Bônus de precisão: sem erros ganha bônus
+    // Bônus de precisão: sem erros ganha bônus (1000 pontos)
     if (erros === 0) {
-        pontos += 500;
+        pontos += 1000;
+    } else {
+        // Penalidade por erros: -50 pontos por erro
+        pontos = Math.max(10000, pontos - (erros * 50));
     }
 
     document.getElementById('tempoFinal').textContent = tempoFormatado;
@@ -480,8 +601,39 @@ function mostrarTelaVitoria(tempoFinal) {
     mostrarTela('telaVitoria');
 }
 
+// Função para desistir do jogo
+function desistirJogo() {
+    if (!confirm('Deseja realmente desistir e salvar sua pontuação parcial?')) {
+        return;
+    }
+
+    jogoAtivo = false;
+    pararCronometro();
+
+    const tempoFinal = obterTempoFinal();
+    const minutos = Math.floor(tempoFinal / 60);
+    const segundos = tempoFinal % 60;
+    const tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+
+    // Calcular pontos parciais baseado no progresso
+    const planetasCorretos = slotsPreenchidos.filter((id, index) => id === index + 1).length;
+    pontos = planetasCorretos * 500; // 500 pontos por planeta correto (max 4000 se colocar 8)
+
+    // Bônus de precisão parcial
+    if (erros === 0 && planetasCorretos > 0) {
+        pontos += 200;
+    }
+
+    document.getElementById('tempoFinal').textContent = tempoFormatado;
+    document.getElementById('errosFinal').textContent = erros;
+    document.getElementById('pontosFinal').textContent = pontos;
+    document.getElementById('mensagemChallenge').textContent = `⚠️ Jogo incompleto: ${planetasCorretos}/8 planetas corretos`;
+
+    mostrarTela('telaVitoria');
+}
+
 // Sistema de Ranking (Permanente e Temporário)
-let tipoRankingAtual = 'permanente';
+let tipoRankingAtual = 'temporario'; // Temporário é o padrão
 
 function salvarRanking() {
     const nome = document.getElementById('nomeJogador').value.trim();
@@ -492,11 +644,15 @@ function salvarRanking() {
     }
 
     const tempoFinal = obterTempoFinal();
+    const completou = slotsPreenchidos.every((id, index) => id === index + 1);
 
     const novoRegistro = {
         nome: nome,
         tempo: tempoFinal,
         erros: erros,
+        pontos: pontos,
+        completou: completou,
+        planetasCorretos: slotsPreenchidos.filter((id, index) => id === index + 1).length,
         challenge: challengeAtual,
         data: new Date().toISOString()
     };
@@ -515,8 +671,27 @@ function salvarEmRanking(tipo, registro) {
 
     ranking.push(registro);
 
-    // Ordenar por tempo (menor primeiro)
-    ranking.sort((a, b) => a.tempo - b.tempo);
+    // Ordenação PRIORITÁRIA:
+    // 1. Quem completou SEMPRE fica na frente de quem não completou
+    // 2. Entre quem completou: ordenar por tempo (mais rápido primeiro)
+    // 3. Entre quem não completou: ordenar por pontos (mais pontos primeiro)
+    ranking.sort((a, b) => {
+        // Prioridade 1: Completou ou não?
+        const aCompletou = a.completou !== undefined ? a.completou : true; // Compatibilidade com registros antigos
+        const bCompletou = b.completou !== undefined ? b.completou : true;
+
+        if (aCompletou && !bCompletou) return -1; // A completou, B não = A vem primeiro
+        if (!aCompletou && bCompletou) return 1;  // B completou, A não = B vem primeiro
+
+        // Prioridade 2: Se ambos completaram ou ambos não completaram
+        if (aCompletou && bCompletou) {
+            // Ambos completaram: ordenar por tempo (menor é melhor)
+            return a.tempo - b.tempo;
+        } else {
+            // Ambos não completaram: ordenar por pontos (maior é melhor)
+            return (b.pontos || 0) - (a.pontos || 0);
+        }
+    });
 
     // Manter apenas os 50 melhores
     const rankingLimitado = ranking.slice(0, 50);
@@ -586,33 +761,173 @@ function mostrarRanking(filtro = 'todos') {
         const segundos = registro.tempo % 60;
         const tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 
+        const completou = registro.completou !== undefined ? registro.completou : true;
+        const planetasCorretos = registro.planetasCorretos || 8;
+
         let classeTop = '';
         let medalha = `${index + 1}º`;
 
-        if (index === 0) {
-            classeTop = 'top1';
-            medalha = '🥇';
-        } else if (index === 1) {
-            classeTop = 'top2';
-            medalha = '🥈';
-        } else if (index === 2) {
-            classeTop = 'top3';
-            medalha = '🥉';
+        // Medalhas apenas para quem completou
+        if (completou) {
+            if (index === 0) {
+                classeTop = 'top1';
+                medalha = '🥇';
+            } else if (index === 1) {
+                classeTop = 'top2';
+                medalha = '🥈';
+            } else if (index === 2) {
+                classeTop = 'top3';
+                medalha = '🥉';
+            }
         }
 
         const challenge = challenges.find(c => c.id === registro.challenge);
+        const statusCompleto = completou ?
+            `✅ Completo - ${registro.erros} erros` :
+            `⚠️ Incompleto (${planetasCorretos}/8) - ${registro.pontos || 0} pts`;
+
+        // Adicionar classe para jogos incompletos
+        const classeIncompleto = !completou ? 'incompleto' : '';
 
         return `
-            <div class="item-ranking ${classeTop}">
+            <div class="item-ranking ${classeTop} ${classeIncompleto}" onclick='mostrarDetalhesRanking(${JSON.stringify(registro)}, ${index + 1}, "${medalha}")' style="cursor: pointer;">
                 <span class="ranking-posicao">${medalha}</span>
                 <div class="ranking-info">
                     <div class="ranking-nome">${registro.nome}</div>
-                    <div class="ranking-challenge">${challenge ? challenge.nome : 'Clássico'} - ${registro.erros} erros</div>
+                    <div class="ranking-challenge">${challenge ? challenge.nome : 'Clássico'} - ${statusCompleto}</div>
                 </div>
                 <span class="ranking-tempo">${tempoFormatado}</span>
             </div>
         `;
     }).join('');
+}
+
+// Mostrar Detalhes do Ranking em Modal
+function mostrarDetalhesRanking(registro, posicao, medalha) {
+    const minutos = Math.floor(registro.tempo / 60);
+    const segundos = registro.tempo % 60;
+    const tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+
+    const completou = registro.completou !== undefined ? registro.completou : true;
+    const planetasCorretos = registro.planetasCorretos || 8;
+
+    const challenge = challenges.find(c => c.id === registro.challenge);
+    const challengeNome = challenge ? challenge.nome : 'Modo Clássico';
+    const challengeIcone = challenge ? challenge.icone : '🌟';
+
+    // Formatar data em português brasileiro
+    const data = new Date(registro.data);
+    const dataFormatada = data.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+    const horaFormatada = data.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    // Calcular estatísticas extras
+    const tempoPorPlaneta = completou ? (registro.tempo / 8).toFixed(1) :
+                           planetasCorretos > 0 ? (registro.tempo / planetasCorretos).toFixed(1) : '0';
+    const taxaAcerto = completou ? '100%' : `${((planetasCorretos / 8) * 100).toFixed(1)}%`;
+    const precisao = planetasCorretos > 0 ?
+                     `${((planetasCorretos / (planetasCorretos + registro.erros)) * 100).toFixed(1)}%` : '0%';
+
+    // Calcular bônus (se completo)
+    let bonusInfo = '';
+    if (completou) {
+        const bonusTempo = Math.max(0, Math.min(2000, Math.floor((300 - registro.tempo) * 10)));
+        const bonusPrecisao = registro.erros === 0 ? 1000 : 0;
+        bonusInfo = `
+            <div class="info-extra-item">
+                <span class="info-extra-label">⚡ Bônus de Tempo</span>
+                <span class="info-extra-valor">+${bonusTempo} pts</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">🎯 Bônus de Precisão</span>
+                <span class="info-extra-valor">+${bonusPrecisao} pts</span>
+            </div>
+        `;
+    }
+
+    const statusClass = completou ? 'completo' : 'incompleto';
+    const statusTexto = completou ? '✅ Jogo Completo' : `⚠️ Jogo Incompleto (${planetasCorretos}/8)`;
+
+    const conteudo = `
+        <div class="detalhes-header">
+            <div class="detalhes-medalha">${medalha}</div>
+            <div class="detalhes-nome">${registro.nome}</div>
+            <div class="detalhes-challenge">${challengeIcone} ${challengeNome}</div>
+            <div class="detalhes-status ${statusClass}">${statusTexto}</div>
+        </div>
+
+        <div class="detalhes-grid">
+            <div class="detalhe-item">
+                <div class="detalhe-icone">⏱️</div>
+                <div class="detalhe-label">Tempo Total</div>
+                <div class="detalhe-valor">${tempoFormatado}</div>
+            </div>
+
+            <div class="detalhe-item">
+                <div class="detalhe-icone">⭐</div>
+                <div class="detalhe-label">Pontuação</div>
+                <div class="detalhe-valor">${registro.pontos || 0}</div>
+            </div>
+
+            <div class="detalhe-item">
+                <div class="detalhe-icone">❌</div>
+                <div class="detalhe-label">Erros</div>
+                <div class="detalhe-valor">${registro.erros}</div>
+            </div>
+
+            <div class="detalhe-item">
+                <div class="detalhe-icone">🪐</div>
+                <div class="detalhe-label">Planetas Corretos</div>
+                <div class="detalhe-valor">${planetasCorretos}/8</div>
+            </div>
+        </div>
+
+        <div class="detalhes-info-extra">
+            <div class="info-extra-item">
+                <span class="info-extra-label">📅 Data</span>
+                <span class="info-extra-valor">${dataFormatada}</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">🕐 Horário</span>
+                <span class="info-extra-valor">${horaFormatada}</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">📊 Posição no Ranking</span>
+                <span class="info-extra-valor">${posicao}º lugar</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">⏲️ Tempo por Planeta</span>
+                <span class="info-extra-valor">${tempoPorPlaneta}s</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">✓ Taxa de Acerto</span>
+                <span class="info-extra-valor">${taxaAcerto}</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">🎯 Precisão</span>
+                <span class="info-extra-valor">${precisao}</span>
+            </div>
+            ${bonusInfo}
+        </div>
+    `;
+
+    document.getElementById('conteudoModalDetalhes').innerHTML = conteudo;
+    document.getElementById('modalDetalhesRanking').classList.add('ativo');
+}
+
+// Fechar Modal de Detalhes
+function fecharModalDetalhes(event) {
+    // Se clicar no overlay ou no botão fechar
+    if (!event || event.target.id === 'modalDetalhesRanking' || event.target.classList.contains('btn-fechar-modal')) {
+        document.getElementById('modalDetalhesRanking').classList.remove('ativo');
+    }
 }
 
 function filtrarRanking(filtro) {
@@ -726,11 +1041,15 @@ function jogarNovamente() {
 // Suporte a Touch (Mobile)
 let touchPlaneta = null;
 let touchClone = null;
+let touchSlotOrigem = null;
 
 function touchInicio(e) {
     e.preventDefault();
     touchPlaneta = e.target.closest('.planeta');
     if (!touchPlaneta) return;
+
+    // Verificar se o planeta está em um slot
+    touchSlotOrigem = touchPlaneta.closest('.slot');
 
     // Criar clone visual
     touchClone = touchPlaneta.cloneNode(true);
@@ -756,16 +1075,20 @@ function touchMover(e) {
     touchClone.style.left = (touch.clientX - 50) + 'px';
     touchClone.style.top = (touch.clientY - 50) + 'px';
 
-    // Detectar slot sob o dedo
+    // Detectar elemento sob o dedo
     const elementoSob = document.elementFromPoint(touch.clientX, touch.clientY);
     const slotSob = elementoSob ? elementoSob.closest('.slot') : null;
+    const areaPlanetas = elementoSob ? elementoSob.closest('.planetas-container') : null;
 
-    // Remover highlight de todos os slots
+    // Remover highlight de todos os slots e área de planetas
     document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+    document.querySelectorAll('.planetas-container').forEach(c => c.classList.remove('drag-over-area'));
 
-    // Adicionar highlight ao slot atual
+    // Adicionar highlight ao slot ou área atual
     if (slotSob) {
         slotSob.classList.add('drag-over');
+    } else if (areaPlanetas && touchSlotOrigem) {
+        areaPlanetas.classList.add('drag-over-area');
     }
 }
 
@@ -776,26 +1099,85 @@ function touchFim(e) {
     const touch = e.changedTouches[0];
     const elementoSob = document.elementFromPoint(touch.clientX, touch.clientY);
     const slotSob = elementoSob ? elementoSob.closest('.slot') : null;
+    const areaPlanetas = elementoSob ? elementoSob.closest('.planetas-container') : null;
 
-    if (slotSob) {
-        // Simular drop
-        const planetaExistente = slotSob.querySelector('.planeta');
-        if (planetaExistente) {
-            devolverPlaneta(planetaExistente);
+    // Verificar se está soltando na área de planetas (para remover da órbita)
+    if (areaPlanetas && touchSlotOrigem) {
+        const posicaoOrigem = parseInt(touchSlotOrigem.dataset.posicao);
+        const planetaIdOrigem = slotsPreenchidos[posicaoOrigem - 1];
+
+        // Se estava correto, descontar pontos e acertos
+        if (planetaIdOrigem === posicaoOrigem) {
+            acertos--;
+            pontos = Math.max(0, pontos - 50);
         }
 
-        const posicao = parseInt(slotSob.dataset.posicao);
+        // Limpar o slot
+        slotsPreenchidos[posicaoOrigem - 1] = null;
+
+        // Devolver para a área de planetas
+        devolverPlaneta(touchPlaneta);
+        touchPlaneta.style.opacity = '1';
+
+        // Atualizar interface
+        document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+        atualizarProgresso();
+    } else if (slotSob) {
+        // Soltar em um slot
+        const posicaoDestino = parseInt(slotSob.dataset.posicao);
         const planetaId = parseInt(touchPlaneta.dataset.planetaId);
+
+        // Limpar pontuação e acerto da posição de origem se o planeta estava correto
+        if (touchSlotOrigem) {
+            const posicaoOrigem = parseInt(touchSlotOrigem.dataset.posicao);
+            const planetaIdOrigem = slotsPreenchidos[posicaoOrigem - 1];
+            if (planetaIdOrigem === posicaoOrigem) {
+                acertos--;
+                pontos = Math.max(0, pontos - 100);
+            }
+            slotsPreenchidos[posicaoOrigem - 1] = null;
+        }
+
+        // Se o slot de destino já está ocupado E estamos vindo de outro slot, fazer SWAP
+        const planetaExistente = slotSob.querySelector('.planeta');
+        if (planetaExistente && touchSlotOrigem) {
+            // SWAP: Trocar os planetas de lugar
+            const planetaIdDestino = parseInt(planetaExistente.dataset.planetaId);
+
+            // Limpar pontuação e acerto da posição de destino se o planeta estava correto
+            if (planetaIdDestino === posicaoDestino) {
+                acertos--;
+                pontos = Math.max(0, pontos - 100);
+            }
+
+            // Mover planeta existente para o slot de origem
+            touchSlotOrigem.appendChild(planetaExistente);
+            const posicaoOrigem = parseInt(touchSlotOrigem.dataset.posicao);
+            slotsPreenchidos[posicaoOrigem - 1] = planetaIdDestino;
+
+            // Verificar se o planeta movido para origem ficou correto
+            if (planetaIdDestino === posicaoOrigem) {
+                touchSlotOrigem.classList.add('correto');
+                setTimeout(() => touchSlotOrigem.classList.remove('correto'), 500);
+                acertos++;
+                pontos += 100;
+                mostrarMensagemMotivacional();
+                criarParticulas(touchSlotOrigem);
+            }
+        } else if (planetaExistente) {
+            // Se estamos vindo da área de planetas, apenas devolver o existente
+            devolverPlaneta(planetaExistente);
+        }
 
         // Mover planeta para o slot
         slotSob.appendChild(touchPlaneta);
         touchPlaneta.style.opacity = '1';
 
         // Registrar no array
-        slotsPreenchidos[posicao - 1] = planetaId;
+        slotsPreenchidos[posicaoDestino - 1] = planetaId;
 
         // Verificar se está correto
-        if (planetaId === posicao) {
+        if (planetaId === posicaoDestino) {
             slotSob.classList.add('correto');
             setTimeout(() => slotSob.classList.remove('correto'), 500);
 
@@ -815,6 +1197,9 @@ function touchFim(e) {
             setTimeout(() => slotSob.classList.remove('incorreto'), 500);
         }
 
+        // Atualizar pontos exibidos
+        document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+
         verificarVitoria();
     } else {
         // Devolver ao container original
@@ -826,8 +1211,10 @@ function touchFim(e) {
         document.body.removeChild(touchClone);
     }
     document.querySelectorAll('.slot').forEach(s => s.classList.remove('drag-over'));
+    document.querySelectorAll('.planetas-container').forEach(c => c.classList.remove('drag-over-area'));
     touchPlaneta = null;
     touchClone = null;
+    touchSlotOrigem = null;
 }
 
 // Inicialização

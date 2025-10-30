@@ -60,6 +60,8 @@
             <div class="area-planetas" id="areaPlanetas">
                 <h3>Arraste os planetas:</h3>
                 <div class="planetas-container" id="planetasContainer"></div>
+                <button class="btn-limpar-orbitas" onclick="limparOrbitas()">🔄 Limpar Órbitas</button>
+                <button class="btn-desistir" onclick="desistirJogo()">🏳️ Desistir e Salvar</button>
             </div>
 
             <!-- Área dos Slots (Sistema Solar com Órbitas) -->
@@ -85,8 +87,10 @@
                 <p>⭐ Pontos: <span id="pontosFinal">0</span></p>
                 <p id="mensagemChallenge" class="mensagem-challenge"></p>
             </div>
-            <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20">
-            <button class="btn-principal" onclick="salvarRanking()">Salvar no Ranking</button>
+            <form onsubmit="event.preventDefault(); salvarRanking(); return false;" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20" autocomplete="off">
+                <button type="submit" class="btn-principal">Salvar no Ranking</button>
+            </form>
             <button class="btn-secundario" onclick="jogarNovamente()">Jogar Novamente</button>
         </div>
     </div>
@@ -98,12 +102,12 @@
 
             <!-- Abas de Ranking -->
             <div class="tabs-ranking">
-                <button class="tab-btn ativo" onclick="alternarTipoRanking('permanente')">🏅 Permanente</button>
-                <button class="tab-btn" onclick="alternarTipoRanking('temporario')">⏳ Temporário</button>
+                <button class="tab-btn ativo" onclick="alternarTipoRanking('temporario')">⏳ Temporário</button>
+                <button class="tab-btn" onclick="alternarTipoRanking('permanente')">🏅 Permanente</button>
             </div>
 
             <!-- Botão Limpar (só aparece no temporário) -->
-            <div id="btnLimparContainer" class="btn-limpar-container" style="display: none;">
+            <div id="btnLimparContainer" class="btn-limpar-container" style="display: block;">
                 <button class="btn-limpar" onclick="limparRankingTemporario()">🗑️ Limpar Ranking Temporário</button>
             </div>
 
@@ -127,6 +131,14 @@
             <h1>🎮 Challenges 🎮</h1>
             <div class="challenges-grid" id="challengesGrid"></div>
             <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Ranking -->
+    <div id="modalDetalhesRanking" class="modal-overlay" onclick="fecharModalDetalhes(event)">
+        <div class="modal-detalhes" onclick="event.stopPropagation()">
+            <button class="btn-fechar-modal" onclick="fecharModalDetalhes()">✕</button>
+            <div id="conteudoModalDetalhes"></div>
         </div>
     </div>
 
