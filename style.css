@@ -479,7 +479,7 @@ body {
     gap: 15px;
     justify-content: center;
     min-height: 400px;
-    padding: 20px;
+    padding: 20px 0;
     transition: all 0.3s ease;
 }
 
@@ -492,8 +492,6 @@ body {
 
 /* Planetas */
 .planeta {
-    width: 100px;
-    height: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1227,46 +1225,112 @@ body {
 
 /* Responsividade */
 @media (max-width: 1200px) {
+    .header-jogo {
+        padding: 10px 20px;
+        margin-bottom: 8px;
+    }
+
+    .progresso-container {
+        margin: 0 auto 8px;
+        padding: 0 20px;
+    }
+
+    .progresso-texto {
+        display: none;
+    }
+
+    .progresso-barra {
+        height: 4px;
+    }
+
+    .mensagem-motivacional {
+        display: none;
+    }
+
     .area-jogo {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .area-slots {
-        order: 1;
-    }
-
-    .area-planetas {
-        order: 2;
+        grid-template-columns: 320px 1fr;
+        gap: 10px;
     }
 
     .sistema-solar {
-        width: 700px;
-        height: 700px;
+        width: 490px;
+        height: 490px;
+    }
+
+    .sol {
+        font-size: 2.8em;
+    }
+
+    .slot {
+        width: 70px;
+        height: 70px;
+    }
+
+    .slot-numero {
+        font-size: 0.9em;
+    }
+
+    .slot .planeta .planeta-visual {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .slot .planeta.saturno .planeta-visual {
+        width: 48px !important;
+        height: 32px !important;
     }
 }
 
 @media (max-width: 900px) {
+    .header-jogo {
+        padding: 8px 15px;
+        margin-bottom: 6px;
+    }
+
+    .progresso-container {
+        margin: 0 auto 6px;
+        padding: 0 15px;
+    }
+
+    .progresso-barra {
+        height: 3px;
+    }
+
+    .area-jogo {
+        grid-template-columns: 300px 1fr;
+        gap: 8px;
+    }
+
     .sistema-solar {
-        width: 650px;
-        height: 650px;
+        width: 455px;
+        height: 455px;
     }
 
     .sol {
-        font-size: 3.5em;
+        font-size: 2.5em;
     }
 
     .slot {
-        width: 90px;
-        height: 90px;
+        width: 63px;
+        height: 63px;
     }
 
     .slot-numero {
-        font-size: 1em;
+        font-size: 0.85em;
     }
 
     .slot-nome {
-        font-size: 0.75em;
+        font-size: 0.65em;
+    }
+
+    .slot .planeta .planeta-visual {
+        width: 30px !important;
+        height: 30px !important;
+    }
+
+    .slot .planeta.saturno .planeta-visual {
+        width: 45px !important;
+        height: 30px !important;
     }
 }
 
@@ -1276,83 +1340,164 @@ body {
     }
 
     .header-jogo {
-        flex-direction: column;
-        gap: 15px;
+        padding: 8px 12px;
+        margin-bottom: 5px;
+        gap: 5px;
+    }
+
+    .btn-voltar {
+        font-size: 0.8em;
+        padding: 6px 12px;
     }
 
     .info-jogo {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: center;
     }
 
     .challenge-atual, .cronometro, .tentativas, .pontos {
-        font-size: 1em;
-        padding: 8px 15px;
+        font-size: 0.7em;
+        padding: 4px 8px;
     }
 
-    .btn-limpar-orbitas {
+    .progresso-container {
+        margin: 0 auto 5px;
+        padding: 0 10px;
+    }
+
+    .progresso-barra {
+        height: 3px;
+    }
+
+    .mensagem-motivacional {
+        display: none;
+    }
+
+    .area-jogo {
+        gap: 8px;
+        padding: 0 8px;
+        grid-template-columns: 280px 1fr;
+    }
+
+    .area-planetas {
+        padding: 6px;
+        max-height: none;
+        overflow-y: visible;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .area-planetas h3 {
+        font-size: 0.85em;
+        margin-bottom: 4px;
+    }
+
+    .area-slots {
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .area-planetas h3, .area-slots h3 {
         font-size: 0.9em;
-        padding: 10px 20px;
+        margin-bottom: 6px;
+    }
+
+    .planetas-container {
+        min-height: auto;
+        max-height: calc(90vh - 180px);
+        overflow-y: auto;
+        padding: 2px 0;
+        gap: 0;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 1 auto;
+    }
+
+    .btn-limpar-orbitas, .btn-desistir {
+        font-size: 0.7em;
+        padding: 5px 8px;
+        margin-top: 6px;
+        width: 100%;
+        flex-shrink: 0;
     }
 
     .planeta {
-        width: 90px;
-        height: 100px;
+        width: 50px;
+        height: 45px;
+        animation: none;
+        margin: 0;
     }
 
     .planeta-visual {
-        width: 60px !important;
-        height: 60px !important;
+        width: 28px !important;
+        height: 28px !important;
+        margin-bottom: 2px;
     }
 
     .planeta.pequeno .planeta-visual {
-        width: 45px !important;
-        height: 45px !important;
+        width: 22px !important;
+        height: 22px !important;
     }
 
     .planeta.medio .planeta-visual {
-        width: 55px !important;
-        height: 55px !important;
+        width: 26px !important;
+        height: 26px !important;
     }
 
     .planeta.grande .planeta-visual {
-        width: 70px !important;
-        height: 70px !important;
+        width: 30px !important;
+        height: 30px !important;
     }
 
     .planeta.saturno .planeta-visual {
-        width: 85px !important;
-        height: 60px !important;
+        width: 38px !important;
+        height: 28px !important;
     }
 
     .planeta.grande.saturno .planeta-visual {
-        width: 100px !important;
-        height: 70px !important;
+        width: 42px !important;
+        height: 30px !important;
+    }
+
+    .planeta-nome {
+        font-size: 0.6em;
+        margin: 0;
+        padding: 0;
     }
 
     .sistema-solar {
-        width: 650px;
-        height: 650px;
+        width: 455px;
+        height: 455px;
     }
 
     .sol {
-        font-size: 3em;
+        font-size: 2.1em;
     }
 
     .slot {
-        width: 80px;
-        height: 80px;
+        width: 56px;
+        height: 56px;
     }
 
     .slot .planeta .planeta-visual {
-        width: 40px !important;
-        height: 40px !important;
+        width: 28px !important;
+        height: 28px !important;
     }
 
     .slot .planeta.saturno .planeta-visual {
-        width: 60px !important;
-        height: 40px !important;
+        width: 42px !important;
+        height: 28px !important;
+    }
+
+    .slot-numero {
+        font-size: 0.8em;
+    }
+
+    .slot-nome {
+        font-size: 0.6em;
     }
 
     .slot-numero {
@@ -1365,22 +1510,122 @@ body {
 }
 
 @media (max-width: 500px) {
+    .progresso-container {
+        margin: 0 auto 4px;
+        padding: 0 8px;
+    }
+
+    .progresso-barra {
+        height: 2px;
+    }
+
+    .area-jogo {
+        grid-template-columns: 230px 1fr;
+        gap: 5px;
+        padding: 0 5px;
+    }
+
     .sistema-solar {
-        width: 600px;
-        height: 600px;
+        width: 350px;
+        height: 350px;
+    }
+
+    .area-planetas {
+        padding: 6px;
+    }
+
+    .area-slots {
+        padding: 8px;
     }
 
     .area-slots h3 {
-        font-size: 1.3em;
+        font-size: 0.8em;
+        margin-bottom: 4px;
+    }
+
+    .area-planetas h3 {
+        font-size: 0.8em;
+        margin-bottom: 4px;
+    }
+
+    .planetas-container {
+        padding: 2px 0;
+        gap: 0;
+        max-height: calc(90vh - 160px);
+        overflow-y: auto;
+    }
+
+    .btn-limpar-orbitas, .btn-desistir {
+        font-size: 0.65em;
+        padding: 4px 6px;
+        margin-top: 4px;
+        width: 100%;
     }
 
     .slot {
-        width: 70px;
-        height: 70px;
+        width: 45px;
+        height: 45px;
     }
 
     .sol {
-        font-size: 2.5em;
+        font-size: 1.5em;
+    }
+
+    .planeta {
+        width: 45px;
+        height: 42px;
+        animation: none;
+        margin: 0;
+    }
+
+    .planeta-visual {
+        width: 26px !important;
+        height: 26px !important;
+        margin-bottom: 2px;
+    }
+
+    .planeta.pequeno .planeta-visual {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    .planeta.medio .planeta-visual {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .planeta.grande .planeta-visual {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    .planeta.saturno .planeta-visual {
+        width: 36px !important;
+        height: 26px !important;
+    }
+
+    .planeta-nome {
+        font-size: 0.55em;
+        margin: 0;
+        padding: 0;
+    }
+
+    .slot .planeta .planeta-visual {
+        width: 25px !important;
+        height: 25px !important;
+    }
+
+    .slot .planeta.saturno .planeta-visual {
+        width: 38px !important;
+        height: 25px !important;
+    }
+
+    .slot-numero {
+        font-size: 0.7em;
+    }
+
+    .slot-nome {
+        font-size: 0.55em;
     }
 }
 
