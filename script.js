@@ -181,6 +181,9 @@ function criarSlots() {
     // Raios das órbitas (do Sol para fora)
     const raios = [60, 90, 120, 150, 190, 230, 270, 310];
 
+    // Ângulos para distribuir os slots sem sobrepor (em graus)
+    const angulos = [0, 45, 90, 135, 180, 225, 270, 315];
+
     for (let i = 0; i < 8; i++) {
         // Criar órbita circular
         const orbita = document.createElement('div');
@@ -188,10 +191,19 @@ function criarSlots() {
         orbita.style.width = `${raios[i] * 2}px`;
         orbita.style.height = `${raios[i] * 2}px`;
 
-        // Criar slot posicionado no topo da órbita
+        // Criar slot posicionado em um ângulo específico da órbita
         const slot = document.createElement('div');
         slot.className = 'slot';
         slot.dataset.posicao = i + 1;
+
+        // Calcular posição do slot usando trigonometria
+        const anguloRad = (angulos[i] - 90) * (Math.PI / 180); // -90 para começar do topo
+        const x = Math.cos(anguloRad) * raios[i];
+        const y = Math.sin(anguloRad) * raios[i];
+
+        slot.style.left = `calc(50% + ${x}px)`;
+        slot.style.top = `calc(50% + ${y}px)`;
+
         slot.innerHTML = `
             <span class="slot-numero">${i + 1}º</span>
             <span class="slot-nome">${planetas[i].nome}</span>
