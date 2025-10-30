@@ -1,9 +1,10 @@
-const CACHE_NAME = 'puzzle-solar-v1';
+const CACHE_NAME = 'puzzle-solar-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/style.css',
   '/script.js',
+  '/planetas.js',
   '/manifest.json'
 ];
 

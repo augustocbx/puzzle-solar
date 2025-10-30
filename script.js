@@ -152,20 +152,10 @@ function criarPlanetas() {
         div.draggable = true;
         div.dataset.planetaId = planeta.id;
 
-        // Criar representação visual do planeta
-        let planetaVisual = '';
-        if (planeta.classe === 'saturno') {
-            planetaVisual = `
-                <div class="planeta-esfera ${planeta.classe}-esfera"></div>
-                <div class="anel-saturno"></div>
-            `;
-        } else {
-            planetaVisual = `<div class="planeta-esfera ${planeta.classe}-esfera"></div>`;
-        }
-
+        // Usar SVG do planeta
         div.innerHTML = `
             <div class="planeta-visual">
-                ${planetaVisual}
+                ${planetasSVG[planeta.classe]}
             </div>
             <span class="planeta-nome">${planeta.nome}</span>
         `;
