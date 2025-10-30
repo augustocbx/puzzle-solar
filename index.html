@@ -29,6 +29,7 @@
             <button class="btn-principal" onclick="iniciarJogo()">Começar Jogo</button>
             <button class="btn-secundario" onclick="mostrarRanking()">Ver Ranking</button>
             <button class="btn-secundario" onclick="mostrarChallenges()">Challenges</button>
+            <button class="btn-secundario" onclick="mostrarBadges()">Badges</button>
         </div>
     </div>
 
@@ -134,11 +135,58 @@
         </div>
     </div>
 
+    <!-- Tela de Badges -->
+    <div id="telaBadges" class="tela">
+        <div class="container-badges">
+            <h1>🏅 Badges 🏅</h1>
+            <div class="badges-progresso">
+                <div class="progresso-badge-info">
+                    <span id="badgesDesbloqueadosTexto">0/18</span> desbloqueados
+                </div>
+                <div class="progresso-badge-barra">
+                    <div class="progresso-badge-preenchimento" id="progressoBadge"></div>
+                </div>
+            </div>
+
+            <!-- Filtros de Categoria -->
+            <div class="filtros-badges">
+                <button class="btn-filtro-badge ativo" onclick="filtrarBadges('todos')">Todos</button>
+                <button class="btn-filtro-badge" onclick="filtrarBadges('iniciante')">Iniciante</button>
+                <button class="btn-filtro-badge" onclick="filtrarBadges('velocidade')">Velocidade</button>
+                <button class="btn-filtro-badge" onclick="filtrarBadges('precisao')">Precisão</button>
+                <button class="btn-filtro-badge" onclick="filtrarBadges('pontuacao')">Pontuação</button>
+                <button class="btn-filtro-badge" onclick="filtrarBadges('dedicacao')">Dedicação</button>
+                <button class="btn-filtro-badge" onclick="filtrarBadges('especial')">Especial</button>
+            </div>
+
+            <div class="badges-grid" id="badgesGrid"></div>
+            <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
+        </div>
+    </div>
+
     <!-- Modal de Detalhes do Ranking -->
     <div id="modalDetalhesRanking" class="modal-overlay" onclick="fecharModalDetalhes(event)">
         <div class="modal-detalhes" onclick="event.stopPropagation()">
             <button class="btn-fechar-modal" onclick="fecharModalDetalhes()">✕</button>
             <div id="conteudoModalDetalhes"></div>
+        </div>
+    </div>
+
+    <!-- Notificação de Badge Desbloqueado -->
+    <div id="notificacaoBadge" class="notificacao-badge">
+        <div class="notificacao-badge-conteudo">
+            <div class="notificacao-badge-header">🎉 Badge Desbloqueado!</div>
+            <div class="notificacao-badge-icone" id="notificacaoBadgeIcone">🏅</div>
+            <div class="notificacao-badge-nome" id="notificacaoBadgeNome">Nome do Badge</div>
+            <div class="notificacao-badge-descricao" id="notificacaoBadgeDescricao">Descrição do badge</div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes do Badge -->
+    <div id="modalDetalhesBadge" class="modal-overlay" onclick="fecharModalBadge(event)">
+        <div class="modal-detalhes" onclick="event.stopPropagation()">
+            <button class="btn-fechar-modal" onclick="fecharModalBadge()">✕</button>
+            <div id="conteudoModalBadge"></div>
         </div>
     </div>
 

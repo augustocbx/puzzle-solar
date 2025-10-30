@@ -67,6 +67,169 @@ const challenges = [
     }
 ];
 
+// Sistema de Badges
+const badges = [
+    // Badges de Iniciante
+    {
+        id: 'primeira-vitoria',
+        nome: 'Primeira Vitória',
+        descricao: 'Complete o puzzle pela primeira vez',
+        icone: '🌟',
+        categoria: 'iniciante',
+        verificar: (stats) => stats.jogosCompletos >= 1
+    },
+    {
+        id: 'explorador',
+        nome: 'Explorador Espacial',
+        descricao: 'Jogue 5 partidas completas',
+        icone: '🚀',
+        categoria: 'iniciante',
+        verificar: (stats) => stats.jogosCompletos >= 5
+    },
+    {
+        id: 'persistente',
+        nome: 'Persistente',
+        descricao: 'Jogue 10 partidas completas',
+        icone: '💪',
+        categoria: 'iniciante',
+        verificar: (stats) => stats.jogosCompletos >= 10
+    },
+    // Badges de Velocidade
+    {
+        id: 'rapido',
+        nome: 'Relâmpago',
+        descricao: 'Complete em menos de 1 minuto',
+        icone: '⚡',
+        categoria: 'velocidade',
+        verificar: (stats) => stats.melhorTempo > 0 && stats.melhorTempo < 60
+    },
+    {
+        id: 'super-rapido',
+        nome: 'Supersônico',
+        descricao: 'Complete em menos de 45 segundos',
+        icone: '💨',
+        categoria: 'velocidade',
+        verificar: (stats) => stats.melhorTempo > 0 && stats.melhorTempo < 45
+    },
+    {
+        id: 'luz',
+        nome: 'Velocidade da Luz',
+        descricao: 'Complete em menos de 30 segundos',
+        icone: '✨',
+        categoria: 'velocidade',
+        verificar: (stats) => stats.melhorTempo > 0 && stats.melhorTempo < 30
+    },
+    // Badges de Precisão
+    {
+        id: 'perfeito',
+        nome: 'Perfeição',
+        descricao: 'Complete sem erros',
+        icone: '🎯',
+        categoria: 'precisao',
+        verificar: (stats) => stats.zerarErros >= 1
+    },
+    {
+        id: 'cirurgiao',
+        nome: 'Cirurgião Espacial',
+        descricao: 'Complete 5 vezes sem erros',
+        icone: '💎',
+        categoria: 'precisao',
+        verificar: (stats) => stats.zerarErros >= 5
+    },
+    {
+        id: 'infalivel',
+        nome: 'Infalível',
+        descricao: 'Complete 10 vezes sem erros',
+        icone: '👑',
+        categoria: 'precisao',
+        verificar: (stats) => stats.zerarErros >= 10
+    },
+    // Badges de Pontuação
+    {
+        id: 'milhares',
+        nome: 'Milhares',
+        descricao: 'Alcance 11.000 pontos',
+        icone: '⭐',
+        categoria: 'pontuacao',
+        verificar: (stats) => stats.melhorPontuacao >= 11000
+    },
+    {
+        id: 'elite',
+        nome: 'Elite',
+        descricao: 'Alcance 12.000 pontos',
+        icone: '🌠',
+        categoria: 'pontuacao',
+        verificar: (stats) => stats.melhorPontuacao >= 12000
+    },
+    {
+        id: 'lendario',
+        nome: 'Lendário',
+        descricao: 'Alcance 13.000 pontos (pontuação máxima)',
+        icone: '🏆',
+        categoria: 'pontuacao',
+        verificar: (stats) => stats.melhorPontuacao >= 13000
+    },
+    // Badges de Dedicação
+    {
+        id: 'dedicado',
+        nome: 'Dedicado',
+        descricao: 'Jogue 25 partidas',
+        icone: '🎮',
+        categoria: 'dedicacao',
+        verificar: (stats) => stats.totalPartidas >= 25
+    },
+    {
+        id: 'viciado',
+        nome: 'Viciado Espacial',
+        descricao: 'Jogue 50 partidas',
+        icone: '🎪',
+        categoria: 'dedicacao',
+        verificar: (stats) => stats.totalPartidas >= 50
+    },
+    {
+        id: 'astronomo',
+        nome: 'Astrônomo Profissional',
+        descricao: 'Jogue 100 partidas',
+        icone: '🔭',
+        categoria: 'dedicacao',
+        verificar: (stats) => stats.totalPartidas >= 100
+    },
+    // Badges Especiais
+    {
+        id: 'todos-challenges',
+        nome: 'Mestre dos Desafios',
+        descricao: 'Complete todos os challenges',
+        icone: '🎖️',
+        categoria: 'especial',
+        verificar: (stats) => {
+            const challengeStats = carregarChallenges();
+            return challengeStats.classico && challengeStats.velocista &&
+                   challengeStats.precisao && challengeStats.memoria && challengeStats.mestre;
+        }
+    },
+    {
+        id: 'top-ranking',
+        nome: 'Top do Ranking',
+        descricao: 'Alcance o 1º lugar no ranking',
+        icone: '🥇',
+        categoria: 'especial',
+        verificar: (stats) => stats.primeiroLugar >= 1
+    },
+    {
+        id: 'todos-badges',
+        nome: 'Colecionador',
+        descricao: 'Desbloqueie todos os badges',
+        icone: '🌌',
+        categoria: 'especial',
+        verificar: (stats) => {
+            const badgesDesbloqueados = carregarBadges();
+            const totalBadges = badges.filter(b => b.id !== 'todos-badges').length;
+            const desbloqueados = Object.values(badgesDesbloqueados).filter(v => v === true).length;
+            return desbloqueados >= totalBadges;
+        }
+    }
+];
+
 // Variáveis do Jogo
 let jogoAtivo = false;
 let tempoInicio = 0;
@@ -661,6 +824,30 @@ function salvarRanking() {
     salvarEmRanking('permanente', novoRegistro);
     salvarEmRanking('temporario', novoRegistro);
 
+    // Atualizar estatísticas do jogador
+    atualizarEstatisticas(tempoFinal, pontos, erros, completou);
+
+    // Verificar se está em primeiro lugar (para badge)
+    const ranking = carregarRanking('permanente');
+    if (ranking.length > 0 && ranking[0].nome === nome) {
+        const stats = carregarEstatisticasJogador();
+        stats.primeiroLugar = 1;
+        localStorage.setItem('estatisticasSolar', JSON.stringify(stats));
+    }
+
+    // Verificar e desbloquear badges
+    const badgesNovos = verificarBadges(nome);
+
+    // Mostrar notificações de badges desbloqueados
+    if (badgesNovos.length > 0) {
+        let delay = 500;
+        badgesNovos.forEach((badge, index) => {
+            setTimeout(() => {
+                mostrarNotificacaoBadge(badge);
+            }, delay + (index * 4500)); // 4500ms entre cada badge (4s de exibição + 500ms de intervalo)
+        });
+    }
+
     alert('Pontuação salva no ranking!');
     mostrarRanking();
 }
@@ -1215,6 +1402,270 @@ function touchFim(e) {
     touchPlaneta = null;
     touchClone = null;
     touchSlotOrigem = null;
+}
+
+// ==================== SISTEMA DE BADGES ====================
+
+// Carregar Badges Desbloqueados Globalmente
+function carregarBadgesGlobais() {
+    const dados = localStorage.getItem('badgesSolarGlobais');
+    return dados ? JSON.parse(dados) : {};
+}
+
+// Salvar Badge Desbloqueado Globalmente (primeiro usuário)
+function salvarBadgeGlobal(badgeId, nomeUsuario) {
+    const badgesGlobais = carregarBadgesGlobais();
+
+    // Só salva se ainda não foi desbloqueado (primeiro usuário)
+    if (!badgesGlobais[badgeId]) {
+        badgesGlobais[badgeId] = {
+            desbloqueado: true,
+            primeiroUsuario: nomeUsuario,
+            dataDesbloqueio: new Date().toISOString(),
+            conquistadoPor: [nomeUsuario]
+        };
+        localStorage.setItem('badgesSolarGlobais', JSON.stringify(badgesGlobais));
+        return true; // É o primeiro
+    } else {
+        // Adiciona usuário à lista de conquistadores
+        if (!badgesGlobais[badgeId].conquistadoPor.includes(nomeUsuario)) {
+            badgesGlobais[badgeId].conquistadoPor.push(nomeUsuario);
+            localStorage.setItem('badgesSolarGlobais', JSON.stringify(badgesGlobais));
+        }
+        return false; // Não é o primeiro
+    }
+}
+
+// Carregar Estatísticas do Jogador
+function carregarEstatisticasJogador() {
+    const dados = localStorage.getItem('estatisticasSolar');
+    return dados ? JSON.parse(dados) : {
+        jogosCompletos: 0,
+        totalPartidas: 0,
+        melhorTempo: 0,
+        melhorPontuacao: 0,
+        zerarErros: 0,
+        primeiroLugar: 0
+    };
+}
+
+// Atualizar Estatísticas do Jogador
+function atualizarEstatisticas(tempoFinal, pontosFinais, errosFinais, completou) {
+    const stats = carregarEstatisticasJogador();
+
+    stats.totalPartidas++;
+
+    if (completou) {
+        stats.jogosCompletos++;
+
+        // Atualizar melhor tempo
+        if (stats.melhorTempo === 0 || tempoFinal < stats.melhorTempo) {
+            stats.melhorTempo = tempoFinal;
+        }
+
+        // Atualizar melhor pontuação
+        if (pontosFinais > stats.melhorPontuacao) {
+            stats.melhorPontuacao = pontosFinais;
+        }
+
+        // Contar jogos sem erros
+        if (errosFinais === 0) {
+            stats.zerarErros++;
+        }
+    }
+
+    localStorage.setItem('estatisticasSolar', JSON.stringify(stats));
+    return stats;
+}
+
+// Verificar se está em primeiro lugar no ranking
+function verificarPrimeiroLugar() {
+    const ranking = carregarRanking('permanente');
+    if (ranking.length === 0) return false;
+
+    // Pegar o nome do jogador atual do input (se existir)
+    const nomeAtual = document.getElementById('nomeJogador')?.value.trim();
+    if (!nomeAtual) return false;
+
+    // Verificar se está em primeiro
+    const primeiro = ranking[0];
+    return primeiro.nome === nomeAtual;
+}
+
+// Verificar e Desbloquear Badges
+function verificarBadges(nomeUsuario) {
+    const stats = carregarEstatisticasJogador();
+    const badgesGlobais = carregarBadgesGlobais();
+    const badgesDesbloqueados = [];
+
+    // Verificar cada badge
+    badges.forEach(badge => {
+        // Se já foi desbloqueado globalmente, pular
+        if (badgesGlobais[badge.id]) return;
+
+        // Verificar se o usuário conquistou o badge
+        if (badge.verificar(stats)) {
+            const ehPrimeiro = salvarBadgeGlobal(badge.id, nomeUsuario);
+
+            if (ehPrimeiro) {
+                badgesDesbloqueados.push(badge);
+            }
+        }
+    });
+
+    return badgesDesbloqueados;
+}
+
+// Mostrar Notificação de Badge Desbloqueado
+function mostrarNotificacaoBadge(badge) {
+    const notificacao = document.getElementById('notificacaoBadge');
+    document.getElementById('notificacaoBadgeIcone').textContent = badge.icone;
+    document.getElementById('notificacaoBadgeNome').textContent = badge.nome;
+    document.getElementById('notificacaoBadgeDescricao').textContent = badge.descricao;
+
+    notificacao.classList.add('mostrar');
+
+    // Remover após 4 segundos
+    setTimeout(() => {
+        notificacao.classList.remove('mostrar');
+    }, 4000);
+}
+
+// Mostrar Tela de Badges
+function mostrarBadges() {
+    mostrarTela('telaBadges');
+    filtrarBadges('todos');
+}
+
+// Filtrar Badges por Categoria
+function filtrarBadges(categoria) {
+    // Atualizar botões ativos
+    document.querySelectorAll('.btn-filtro-badge').forEach(btn => {
+        btn.classList.remove('ativo');
+    });
+    event.target.classList.add('ativo');
+
+    const badgesGlobais = carregarBadgesGlobais();
+    const badgesFiltrados = categoria === 'todos' ?
+        badges : badges.filter(b => b.categoria === categoria);
+
+    const container = document.getElementById('badgesGrid');
+
+    // Calcular progresso
+    const totalBadges = badges.length;
+    const badgesDesbloqueadosCount = Object.keys(badgesGlobais).length;
+    const percentual = (badgesDesbloqueadosCount / totalBadges) * 100;
+
+    document.getElementById('badgesDesbloqueadosTexto').textContent =
+        `${badgesDesbloqueadosCount}/${totalBadges}`;
+    document.getElementById('progressoBadge').style.width = `${percentual}%`;
+
+    // Renderizar badges
+    container.innerHTML = badgesFiltrados.map(badge => {
+        const badgeGlobal = badgesGlobais[badge.id];
+        const desbloqueado = badgeGlobal !== undefined;
+        const classeCard = desbloqueado ? 'desbloqueado' : 'bloqueado';
+        const classeStatus = desbloqueado ? 'desbloqueado' : 'bloqueado';
+        const textoStatus = desbloqueado ? '✅ Desbloqueado' : '🔒 Bloqueado';
+
+        const onclick = desbloqueado ?
+            `onclick='mostrarDetalhesBadge(${JSON.stringify(badge.id)})' style="cursor: pointer;"` : '';
+
+        return `
+            <div class="badge-card ${classeCard}" ${onclick}>
+                <div class="badge-icone">${badge.icone}</div>
+                <div class="badge-nome">${badge.nome}</div>
+                <div class="badge-descricao">${badge.descricao}</div>
+                <div class="badge-status ${classeStatus}">${textoStatus}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Mostrar Detalhes do Badge
+function mostrarDetalhesBadge(badgeId) {
+    const badge = badges.find(b => b.id === badgeId);
+    const badgeGlobal = carregarBadgesGlobais()[badgeId];
+
+    if (!badge || !badgeGlobal) return;
+
+    // Formatar data
+    const data = new Date(badgeGlobal.dataDesbloqueio);
+    const dataFormatada = data.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+    const horaFormatada = data.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    const totalConquistadores = badgeGlobal.conquistadoPor.length;
+
+    const conteudo = `
+        <div class="detalhes-header">
+            <div class="detalhes-medalha">${badge.icone}</div>
+            <div class="detalhes-nome">${badge.nome}</div>
+            <div class="detalhes-challenge" style="color: rgba(255, 255, 255, 0.8);">${badge.descricao}</div>
+            <div class="detalhes-status desbloqueado">✅ Badge Desbloqueado</div>
+        </div>
+
+        <div class="detalhes-info-extra" style="margin-top: 20px;">
+            <h3 style="text-align: center; color: #ffd700; margin-bottom: 20px; font-size: 1.4em;">
+                🏆 Primeiro a Desbloquear
+            </h3>
+            <div class="info-extra-item">
+                <span class="info-extra-label">👤 Pioneiro</span>
+                <span class="info-extra-valor" style="color: #ffd700; font-size: 1.2em;">
+                    ${badgeGlobal.primeiroUsuario}
+                </span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">📅 Data do Desbloqueio</span>
+                <span class="info-extra-valor">${dataFormatada}</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">🕐 Horário</span>
+                <span class="info-extra-valor">${horaFormatada}</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">🎖️ Total de Conquistadores</span>
+                <span class="info-extra-valor">${totalConquistadores} jogador${totalConquistadores !== 1 ? 'es' : ''}</span>
+            </div>
+            <div class="info-extra-item">
+                <span class="info-extra-label">📊 Categoria</span>
+                <span class="info-extra-valor" style="text-transform: capitalize;">${badge.categoria}</span>
+            </div>
+        </div>
+
+        ${totalConquistadores > 1 ? `
+            <div class="detalhes-info-extra" style="margin-top: 20px;">
+                <h4 style="color: rgba(255, 255, 255, 0.8); margin-bottom: 15px; text-align: center;">
+                    Outros Conquistadores
+                </h4>
+                <div style="max-height: 200px; overflow-y: auto;">
+                    ${badgeGlobal.conquistadoPor.slice(1).map((nome, index) => `
+                        <div class="info-extra-item">
+                            <span class="info-extra-label">${index + 2}º</span>
+                            <span class="info-extra-valor">${nome}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        ` : ''}
+    `;
+
+    document.getElementById('conteudoModalBadge').innerHTML = conteudo;
+    document.getElementById('modalDetalhesBadge').classList.add('ativo');
+}
+
+// Fechar Modal de Badge
+function fecharModalBadge(event) {
+    if (!event || event.target.id === 'modalDetalhesBadge' || event.target.classList.contains('btn-fechar-modal')) {
+        document.getElementById('modalDetalhesBadge').classList.remove('ativo');
+    }
 }
 
 // Inicialização

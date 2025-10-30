@@ -1,4 +1,4 @@
-const CACHE_NAME = 'puzzle-solar-v16';
+const CACHE_NAME = 'puzzle-solar-v17';
 const urlsToCache = [
   '/',
   '/index.html',
