@@ -1,0 +1,52 @@
+const CACHE_NAME = 'puzzle-solar-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/script.js',
+  '/manifest.json'
+];
+
+// Instalação do Service Worker
+self.addEventListener('install', event => {
+  console.log('Service Worker: Instalando...');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Service Worker: Arquivos em cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+// Ativação do Service Worker
+self.addEventListener('activate', event => {
+  console.log('Service Worker: Ativando...');
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            console.log('Service Worker: Limpando cache antigo');
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+});
+
+// Interceptar requisições
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Retorna do cache se disponível, senão busca da rede
+        return response || fetch(event.request);
+      })
+      .catch(() => {
+        // Se offline e não está no cache, pode retornar uma página de fallback
+        console.log('Service Worker: Offline, sem cache disponível');
+      })
+  );
+});
