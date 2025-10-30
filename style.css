@@ -1,0 +1,647 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+    background: linear-gradient(to bottom, #0a0e27 0%, #1a1f4d 50%, #2a1b3d 100%);
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Animação de Estrelas */
+.stars, .stars2, .stars3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.stars {
+    background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVQImWNgYGD4z8DAwAAACgAE/VAf7wAAAABJRU5ErkJggg==') repeat;
+    animation: animateStars 100s linear infinite;
+    opacity: 0.5;
+}
+
+.stars2 {
+    background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVQImWNgYGD4z8DAwAAACgAE/VAf7wAAAABJRU5ErkJggg==') repeat;
+    animation: animateStars 150s linear infinite;
+    opacity: 0.3;
+}
+
+.stars3 {
+    background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVQImWNgYGD4z8DAwAAACgAE/VAf7wAAAABJRU5ErkJggg==') repeat;
+    animation: animateStars 200s linear infinite;
+    opacity: 0.2;
+}
+
+@keyframes animateStars {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-2000px); }
+}
+
+/* Gerenciamento de Telas */
+.tela {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.tela.ativa {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tela Inicial */
+.container-inicial {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 60px 40px;
+    border-radius: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 40px rgba(138, 43, 226, 0.5);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+.titulo-principal {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #ff6ec7, #ffd93d, #6bcfff, #c77dff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 3s ease infinite;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes gradientMove {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.subtitulo {
+    font-size: 1.5em;
+    margin-bottom: 40px;
+    color: #ffd93d;
+}
+
+/* Botões */
+.btn-principal, .btn-secundario, .btn-voltar, .btn-filtro {
+    padding: 15px 40px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    margin: 10px;
+}
+
+.btn-principal {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
+}
+
+.btn-principal:hover {
+    transform: scale(1.1) rotate(2deg);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.7);
+}
+
+.btn-secundario {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    box-shadow: 0 10px 25px rgba(240, 147, 251, 0.5);
+}
+
+.btn-secundario:hover {
+    transform: scale(1.1) rotate(-2deg);
+    box-shadow: 0 15px 35px rgba(240, 147, 251, 0.7);
+}
+
+.btn-voltar {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: #333;
+}
+
+.btn-voltar:hover {
+    transform: scale(1.05);
+}
+
+/* Tela do Jogo */
+#telaJogo.ativa {
+    display: block;
+}
+
+.header-jogo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.info-jogo {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.challenge-atual, .cronometro, .tentativas {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+}
+
+.challenge-atual {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.cronometro {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.tentativas {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: #333;
+}
+
+.area-jogo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.area-planetas, .area-slots {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.area-planetas h3, .area-slots h3 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #ffd93d;
+}
+
+.planetas-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    min-height: 400px;
+    padding: 20px;
+}
+
+.planeta {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.planeta:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+.planeta:hover {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.planeta-emoji {
+    font-size: 3em;
+}
+
+.planeta-nome {
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 5px;
+    text-align: center;
+}
+
+/* Cores dos Planetas */
+.mercurio { background: linear-gradient(135deg, #969696, #d4d4d4); }
+.venus { background: linear-gradient(135deg, #ffa64d, #ffcc80); }
+.terra { background: linear-gradient(135deg, #4d94ff, #80b3ff); }
+.marte { background: linear-gradient(135deg, #ff6b6b, #ee5a6f); }
+.jupiter { background: linear-gradient(135deg, #ffb366, #ffd699); }
+.saturno { background: linear-gradient(135deg, #f4e4a6, #fef5d4); }
+.urano { background: linear-gradient(135deg, #7cb3d9, #a8d0e6); }
+.netuno { background: linear-gradient(135deg, #4a6fa5, #6a8fc7); }
+
+/* Área dos Slots */
+.sol {
+    font-size: 5em;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.slots-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.slot {
+    min-height: 100px;
+    border: 3px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.slot.drag-over {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #ffd93d;
+    transform: scale(1.05);
+}
+
+.slot.correto {
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.2);
+    animation: pulse 0.5s ease;
+}
+
+.slot.incorreto {
+    border-color: #f44336;
+    background: rgba(244, 67, 54, 0.2);
+    animation: shake 0.5s ease;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.slot-numero {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffd93d;
+}
+
+/* Modal de Vitória */
+.modal-vitoria {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    padding: 50px;
+    border-radius: 30px;
+    text-align: center;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: zoomIn 0.5s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.titulo-vitoria {
+    font-size: 4em;
+    margin-bottom: 20px;
+    animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.mensagem-vitoria {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    color: #ffd93d;
+}
+
+.estatisticas {
+    margin: 30px 0;
+    font-size: 1.5em;
+}
+
+.estatisticas p {
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.mensagem-challenge {
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#nomeJogador {
+    width: 80%;
+    padding: 15px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 15px;
+    margin: 20px 0;
+    text-align: center;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+/* Confetti Animation */
+.confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.confetti::before,
+.confetti::after {
+    content: '🎉🌟✨🎊🎈';
+    position: absolute;
+    top: -50px;
+    font-size: 3em;
+    animation: fall 3s linear infinite;
+}
+
+.confetti::before {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.confetti::after {
+    left: 80%;
+    animation-delay: 1s;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(600px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Ranking */
+.container-ranking, .container-challenges {
+    max-width: 900px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.container-ranking h1, .container-challenges h1 {
+    text-align: center;
+    font-size: 3em;
+    margin-bottom: 30px;
+    color: #ffd93d;
+}
+
+.filtros-ranking {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.btn-filtro {
+    padding: 10px 20px;
+    font-size: 1em;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn-filtro.ativo {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.lista-ranking {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.item-ranking {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    margin: 10px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.item-ranking:hover {
+    transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.item-ranking.top1 {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.item-ranking.top2 {
+    background: linear-gradient(135deg, #c0c0c0, #e0e0e0);
+    color: #333;
+}
+
+.item-ranking.top3 {
+    background: linear-gradient(135deg, #cd7f32, #e69f6d);
+    color: #333;
+}
+
+.ranking-posicao {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.ranking-info {
+    flex: 1;
+}
+
+.ranking-nome {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.ranking-challenge {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.ranking-tempo {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Challenges */
+.challenges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.challenge-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 3px solid transparent;
+    position: relative;
+}
+
+.challenge-card:hover {
+    transform: translateY(-10px);
+    border-color: #ffd93d;
+}
+
+.challenge-card.bloqueado {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.challenge-card.bloqueado:hover {
+    transform: none;
+    border-color: transparent;
+}
+
+.challenge-card.completo {
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.challenge-icone {
+    font-size: 4em;
+    margin-bottom: 15px;
+}
+
+.challenge-nome {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffd93d;
+}
+
+.challenge-descricao {
+    font-size: 1em;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.challenge-status {
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.challenge-status.desbloqueado {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.challenge-status.bloqueado {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.challenge-status.completo {
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+}
+
+.cadeado {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2em;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .area-jogo {
+        grid-template-columns: 1fr;
+    }
+
+    .titulo-principal {
+        font-size: 2em;
+    }
+
+    .header-jogo {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .info-jogo {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .planeta {
+        width: 80px;
+        height: 80px;
+    }
+
+    .planeta-emoji {
+        font-size: 2.5em;
+    }
+}

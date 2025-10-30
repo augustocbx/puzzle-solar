@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle do Sistema Solar 🪐</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Fundo espacial animado -->
+    <div class="stars"></div>
+    <div class="stars2"></div>
+    <div class="stars3"></div>
+
+    <!-- Tela Inicial -->
+    <div id="telaInicial" class="tela ativa">
+        <div class="container-inicial">
+            <h1 class="titulo-principal">🌟 Puzzle do Sistema Solar 🌟</h1>
+            <p class="subtitulo">Organize os planetas na ordem correta!</p>
+            <button class="btn-principal" onclick="iniciarJogo()">Começar Jogo</button>
+            <button class="btn-secundario" onclick="mostrarRanking()">Ver Ranking</button>
+            <button class="btn-secundario" onclick="mostrarChallenges()">Challenges</button>
+        </div>
+    </div>
+
+    <!-- Tela do Jogo -->
+    <div id="telaJogo" class="tela">
+        <div class="header-jogo">
+            <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
+            <div class="info-jogo">
+                <span class="challenge-atual" id="challengeAtual">Modo Clássico</span>
+                <span class="cronometro" id="cronometro">⏱️ 00:00</span>
+                <span class="tentativas" id="tentativas">❌ Erros: 0</span>
+            </div>
+        </div>
+
+        <div class="area-jogo">
+            <!-- Área dos Planetas Embaralhados -->
+            <div class="area-planetas" id="areaPlanetas">
+                <h3>Arraste os planetas:</h3>
+                <div class="planetas-container" id="planetasContainer"></div>
+            </div>
+
+            <!-- Área dos Slots (Sistema Solar) -->
+            <div class="area-slots">
+                <h3>Para a ordem correta:</h3>
+                <div class="sol">☀️</div>
+                <div class="slots-container" id="slotsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Vitória -->
+    <div id="telaVitoria" class="tela">
+        <div class="modal-vitoria">
+            <div class="confetti"></div>
+            <h1 class="titulo-vitoria">🎉 PARABÉNS! 🎉</h1>
+            <p class="mensagem-vitoria">Você completou o puzzle!</p>
+            <div class="estatisticas">
+                <p>⏱️ Tempo: <span id="tempoFinal">00:00</span></p>
+                <p>❌ Erros: <span id="errosFinal">0</span></p>
+                <p id="mensagemChallenge" class="mensagem-challenge"></p>
+            </div>
+            <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20">
+            <button class="btn-principal" onclick="salvarRanking()">Salvar no Ranking</button>
+            <button class="btn-secundario" onclick="jogarNovamente()">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <!-- Tela de Ranking -->
+    <div id="telaRanking" class="tela">
+        <div class="container-ranking">
+            <h1>🏆 Ranking 🏆</h1>
+            <div class="filtros-ranking">
+                <button class="btn-filtro ativo" onclick="filtrarRanking('todos')">Todos</button>
+                <button class="btn-filtro" onclick="filtrarRanking('classico')">Clássico</button>
+                <button class="btn-filtro" onclick="filtrarRanking('velocista')">Velocista</button>
+                <button class="btn-filtro" onclick="filtrarRanking('precisao')">Precisão</button>
+                <button class="btn-filtro" onclick="filtrarRanking('memoria')">Memória</button>
+            </div>
+            <div id="listaRanking" class="lista-ranking"></div>
+            <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
+        </div>
+    </div>
+
+    <!-- Tela de Challenges -->
+    <div id="telaChallenges" class="tela">
+        <div class="container-challenges">
+            <h1>🎮 Challenges 🎮</h1>
+            <div class="challenges-grid" id="challengesGrid"></div>
+            <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
