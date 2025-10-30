@@ -1225,6 +1225,10 @@ body {
 
 /* Responsividade */
 @media (max-width: 1200px) {
+    .qr-small-container {
+        display: none;
+    }
+
     .header-jogo {
         padding: 10px 20px;
         margin-bottom: 8px;
@@ -1400,9 +1404,13 @@ body {
         overflow-x: auto;
     }
 
-    .area-planetas h3, .area-slots h3 {
+    .area-planetas h3 {
         font-size: 0.9em;
         margin-bottom: 6px;
+    }
+
+    .area-slots h3 {
+        display: none;
     }
 
     .planetas-container {
@@ -1539,8 +1547,7 @@ body {
     }
 
     .area-slots h3 {
-        font-size: 0.8em;
-        margin-bottom: 4px;
+        display: none;
     }
 
     .area-planetas h3 {
