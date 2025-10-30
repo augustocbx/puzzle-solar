@@ -1230,8 +1230,22 @@ body {
     }
 
     .header-jogo {
-        padding: 10px 20px;
-        margin-bottom: 8px;
+        padding: 5px 15px;
+        margin-bottom: 4px;
+    }
+
+    .btn-voltar {
+        font-size: 0.75em;
+        padding: 4px 8px;
+    }
+
+    .info-jogo {
+        gap: 5px;
+    }
+
+    .challenge-atual, .cronometro, .tentativas, .pontos {
+        font-size: 0.75em;
+        padding: 4px 8px;
     }
 
     .progresso-container {
@@ -1287,8 +1301,8 @@ body {
 
 @media (max-width: 900px) {
     .header-jogo {
-        padding: 8px 15px;
-        margin-bottom: 6px;
+        padding: 4px 12px;
+        margin-bottom: 4px;
     }
 
     .progresso-container {
@@ -1344,26 +1358,28 @@ body {
     }
 
     .header-jogo {
-        padding: 8px 12px;
-        margin-bottom: 5px;
-        gap: 5px;
+        padding: 3px 8px;
+        margin-bottom: 3px;
+        gap: 3px;
+        min-height: auto;
     }
 
     .btn-voltar {
-        font-size: 0.8em;
-        padding: 6px 12px;
+        font-size: 0.7em;
+        padding: 3px 8px;
     }
 
     .info-jogo {
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: 3px;
         justify-content: center;
     }
 
     .challenge-atual, .cronometro, .tentativas, .pontos {
-        font-size: 0.7em;
-        padding: 4px 8px;
+        font-size: 0.65em;
+        padding: 3px 6px;
+        line-height: 1.2;
     }
 
     .progresso-container {
