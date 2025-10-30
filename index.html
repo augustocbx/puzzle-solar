@@ -90,6 +90,9 @@
             </div>
             <form onsubmit="event.preventDefault(); salvarRanking(); return false;" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                 <div class="input-nome-container">
+                    <button type="button" class="btn-icone-selecionado" id="btnIconeSelecionado" onclick="abrirModalIcones()" title="Escolher ícone">
+                        🚀
+                    </button>
                     <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20" autocomplete="off" oninput="atualizarBotaoNomeAleatorio()">
                     <button type="button" class="btn-nome-aleatorio" id="btnNomeAleatorio" onclick="gerarNomeAleatorio()" title="Gerar nome aleatório">
                         🎲
@@ -192,6 +195,15 @@
         <div class="modal-detalhes" onclick="event.stopPropagation()">
             <button class="btn-fechar-modal" onclick="fecharModalBadge()">✕</button>
             <div id="conteudoModalBadge"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Seleção de Ícone -->
+    <div id="modalIcones" class="modal-overlay" onclick="fecharModalIcones(event)">
+        <div class="modal-icones" onclick="event.stopPropagation()">
+            <button class="btn-fechar-modal" onclick="fecharModalIcones()">✕</button>
+            <h2>Escolha seu ícone espacial</h2>
+            <div class="icones-grid" id="iconesGrid"></div>
         </div>
     </div>
 

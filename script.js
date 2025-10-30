@@ -247,6 +247,17 @@ const nomesEspaciais = [
     'Kosmos', 'Astral', 'Celeste', 'Zenith'
 ];
 
+// Lista de Ícones Espaciais
+const iconesEspaciais = [
+    '🚀', '🛸', '🛰️', '🌍', '🌎', '🌏', '🌑', '🌒',
+    '🌓', '🌔', '🌕', '🌖', '🌗', '🌘', '🌙', '🌚',
+    '🌛', '🌜', '☀️', '⭐', '🌟', '✨', '💫', '⚡',
+    '☄️', '🌠', '🌌', '🔭', '👨‍🚀', '👩‍🚀', '🧑‍🚀', '🪐'
+];
+
+// Variável global para armazenar o ícone selecionado
+let iconeSelecionado = '';
+
 // Variáveis do Jogo
 let jogoAtivo = false;
 let tempoInicio = 0;
@@ -781,6 +792,9 @@ function mostrarTelaVitoria(tempoFinal) {
     // Limpar campo de nome para novo jogo
     document.getElementById('nomeJogador').value = '';
 
+    // Pré-selecionar ícone aleatório
+    preselecionarIconeAleatorio();
+
     mostrarTela('telaVitoria');
 }
 
@@ -815,6 +829,9 @@ function desistirJogo() {
     // Limpar campo de nome para novo jogo
     document.getElementById('nomeJogador').value = '';
 
+    // Pré-selecionar ícone aleatório
+    preselecionarIconeAleatorio();
+
     mostrarTela('telaVitoria');
 }
 
@@ -840,7 +857,8 @@ function salvarRanking() {
         completou: completou,
         planetasCorretos: slotsPreenchidos.filter((id, index) => id === index + 1).length,
         challenge: challengeAtual,
-        data: new Date().toISOString()
+        data: new Date().toISOString(),
+        icone: iconeSelecionado || '🚀' // Ícone selecionado ou foguete como padrão
     };
 
     // Salvar em ambos os rankings
@@ -999,11 +1017,13 @@ function mostrarRanking(filtro = 'todos') {
         // Adicionar classe para jogos incompletos
         const classeIncompleto = !completou ? 'incompleto' : '';
 
+        const iconeUsuario = registro.icone || '🚀';
+
         return `
             <div class="item-ranking ${classeTop} ${classeIncompleto}" onclick='mostrarDetalhesRanking(${JSON.stringify(registro)}, ${index + 1}, "${medalha}")' style="cursor: pointer;">
                 <span class="ranking-posicao">${medalha}</span>
                 <div class="ranking-info">
-                    <div class="ranking-nome">${registro.nome}</div>
+                    <div class="ranking-nome"><span class="icone-usuario">${iconeUsuario}</span> ${registro.nome}</div>
                     <div class="ranking-challenge">${challenge ? challenge.nome : 'Clássico'} - ${statusCompleto}</div>
                 </div>
                 <span class="ranking-tempo">${tempoFormatado}</span>
@@ -1723,6 +1743,66 @@ function atualizarBotaoNomeAleatorio() {
         botao.style.opacity = '0.5';
         botao.style.cursor = 'not-allowed';
     }
+}
+
+// ==================== SISTEMA DE ÍCONES ====================
+
+// Pré-selecionar Ícone Aleatório
+function preselecionarIconeAleatorio() {
+    const iconeAleatorio = iconesEspaciais[Math.floor(Math.random() * iconesEspaciais.length)];
+    iconeSelecionado = iconeAleatorio;
+
+    const btnIcone = document.getElementById('btnIconeSelecionado');
+    if (btnIcone) {
+        btnIcone.textContent = iconeAleatorio;
+    }
+}
+
+// Abrir Modal de Ícones
+function abrirModalIcones() {
+    const modal = document.getElementById('modalIcones');
+    const grid = document.getElementById('iconesGrid');
+
+    // Limpar grid
+    grid.innerHTML = '';
+
+    // Adicionar todos os ícones
+    iconesEspaciais.forEach(icone => {
+        const btnIcone = document.createElement('button');
+        btnIcone.className = 'icone-opcao';
+        btnIcone.textContent = icone;
+        btnIcone.onclick = () => selecionarIcone(icone);
+
+        // Destacar o ícone selecionado
+        if (icone === iconeSelecionado) {
+            btnIcone.classList.add('selecionado');
+        }
+
+        grid.appendChild(btnIcone);
+    });
+
+    modal.classList.add('ativo');
+}
+
+// Fechar Modal de Ícones
+function fecharModalIcones(event) {
+    if (!event || event.target.id === 'modalIcones' || event.target.classList.contains('btn-fechar-modal')) {
+        document.getElementById('modalIcones').classList.remove('ativo');
+    }
+}
+
+// Selecionar Ícone
+function selecionarIcone(icone) {
+    iconeSelecionado = icone;
+
+    // Atualizar o botão que mostra o ícone selecionado
+    const btnIcone = document.getElementById('btnIconeSelecionado');
+    if (btnIcone) {
+        btnIcone.textContent = icone;
+    }
+
+    // Fechar o modal
+    fecharModalIcones({ target: { id: 'modalIcones' } });
 }
 
 // Inicialização
