@@ -287,6 +287,16 @@ function mostrarTela(nomeTela) {
         tela.classList.remove('ativa');
     });
     document.getElementById(nomeTela).classList.add('ativa');
+
+    // Ocultar QR code na tela de jogo
+    const qrBtn = document.getElementById('qr-toggle-btn');
+    if (qrBtn) {
+        if (nomeTela === 'telaJogo') {
+            qrBtn.style.display = 'none';
+        } else {
+            qrBtn.style.display = '';
+        }
+    }
 }
 
 function voltarInicio() {
