@@ -1230,22 +1230,24 @@ body {
     }
 
     .header-jogo {
-        padding: 5px 15px;
-        margin-bottom: 4px;
+        padding: 3px 10px;
+        margin-bottom: 2px;
+        min-height: auto;
     }
 
     .btn-voltar {
-        font-size: 0.75em;
-        padding: 4px 8px;
+        font-size: 0.7em;
+        padding: 3px 6px;
     }
 
     .info-jogo {
-        gap: 5px;
+        gap: 3px;
     }
 
     .challenge-atual, .cronometro, .tentativas, .pontos {
-        font-size: 0.75em;
-        padding: 4px 8px;
+        font-size: 0.7em;
+        padding: 3px 6px;
+        line-height: 1;
     }
 
     .progresso-container {
@@ -1301,8 +1303,20 @@ body {
 
 @media (max-width: 900px) {
     .header-jogo {
-        padding: 4px 12px;
-        margin-bottom: 4px;
+        padding: 2px 8px;
+        margin-bottom: 2px;
+        min-height: auto;
+    }
+
+    .btn-voltar {
+        font-size: 0.65em;
+        padding: 2px 6px;
+    }
+
+    .challenge-atual, .cronometro, .tentativas, .pontos {
+        font-size: 0.65em;
+        padding: 2px 5px;
+        line-height: 1;
     }
 
     .progresso-container {
@@ -1358,28 +1372,28 @@ body {
     }
 
     .header-jogo {
-        padding: 3px 8px;
-        margin-bottom: 3px;
-        gap: 3px;
+        padding: 2px 6px;
+        margin-bottom: 2px;
+        gap: 2px;
         min-height: auto;
     }
 
     .btn-voltar {
-        font-size: 0.7em;
-        padding: 3px 8px;
+        font-size: 0.65em;
+        padding: 2px 6px;
     }
 
     .info-jogo {
         display: flex;
         flex-wrap: wrap;
-        gap: 3px;
+        gap: 2px;
         justify-content: center;
     }
 
     .challenge-atual, .cronometro, .tentativas, .pontos {
-        font-size: 0.65em;
-        padding: 3px 6px;
-        line-height: 1.2;
+        font-size: 0.6em;
+        padding: 2px 5px;
+        line-height: 1;
     }
 
     .progresso-container {
