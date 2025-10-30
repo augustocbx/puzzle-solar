@@ -1251,16 +1251,7 @@ body {
     }
 
     .progresso-container {
-        margin: 0 auto 2px;
-        padding: 0 15px;
-    }
-
-    .progresso-texto {
         display: none;
-    }
-
-    .progresso-barra {
-        height: 3px;
     }
 
     .mensagem-motivacional {
@@ -1320,12 +1311,7 @@ body {
     }
 
     .progresso-container {
-        margin: 0 auto 2px;
-        padding: 0 10px;
-    }
-
-    .progresso-barra {
-        height: 2px;
+        display: none;
     }
 
     .area-jogo {
@@ -1397,12 +1383,7 @@ body {
     }
 
     .progresso-container {
-        margin: 0 auto 2px;
-        padding: 0 8px;
-    }
-
-    .progresso-barra {
-        height: 2px;
+        display: none;
     }
 
     .mensagem-motivacional {
@@ -1549,12 +1530,7 @@ body {
 
 @media (max-width: 500px) {
     .progresso-container {
-        margin: 0 auto 1px;
-        padding: 0 5px;
-    }
-
-    .progresso-barra {
-        height: 2px;
+        display: none;
     }
 
     .area-jogo {
