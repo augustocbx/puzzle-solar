@@ -181,32 +181,31 @@ function criarSlots() {
     // Raios das órbitas (do Sol para fora)
     const raios = [60, 90, 120, 150, 190, 230, 270, 310];
 
-    // Ângulos para distribuir os slots sem sobrepor (em graus)
-    const angulos = [0, 45, 90, 135, 180, 225, 270, 315];
+    // Ângulos iniciais variados para cada órbita (em graus)
+    const angulosIniciais = [0, 45, 120, 200, 280, 330, 90, 170];
 
+    // Criar órbitas com slots dentro
     for (let i = 0; i < 8; i++) {
-        // Criar órbita circular
         const orbita = document.createElement('div');
         orbita.className = `orbita orbita-${i + 1}`;
         orbita.style.width = `${raios[i] * 2}px`;
         orbita.style.height = `${raios[i] * 2}px`;
 
-        // Criar slot posicionado em um ângulo específico da órbita
+        // Aplicar rotação inicial para posicionar o slot
+        orbita.style.setProperty('--angulo-inicial', `${angulosIniciais[i]}deg`);
+
+        // Criar slot para esta órbita
         const slot = document.createElement('div');
-        slot.className = 'slot';
+        slot.className = 'slot slot-orbital';
         slot.dataset.posicao = i + 1;
 
-        // Calcular posição do slot usando trigonometria
-        const anguloRad = (angulos[i] - 90) * (Math.PI / 180); // -90 para começar do topo
-        const x = Math.cos(anguloRad) * raios[i];
-        const y = Math.sin(anguloRad) * raios[i];
+        // Posicionar o slot no topo da órbita (a rotação da órbita vai movê-lo)
+        slot.style.left = '50%';
+        slot.style.top = '0';
 
-        slot.style.left = `calc(50% + ${x}px)`;
-        slot.style.top = `calc(50% + ${y}px)`;
-
+        // SEM nome do planeta - apenas o número
         slot.innerHTML = `
             <span class="slot-numero">${i + 1}º</span>
-            <span class="slot-nome">${planetas[i].nome}</span>
         `;
 
         // Eventos de drop
@@ -215,6 +214,7 @@ function criarSlots() {
         slot.addEventListener('drop', soltar);
         slot.addEventListener('click', removerPlanetaDoSlot);
 
+        // Adicionar slot dentro da órbita
         orbita.appendChild(slot);
         container.appendChild(orbita);
     }
