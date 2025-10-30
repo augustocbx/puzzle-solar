@@ -144,23 +144,42 @@ function criarPlanetas() {
     });
 }
 
-// Criar Slots
+// Criar Slots com Órbitas
 function criarSlots() {
-    const container = document.getElementById('slotsContainer');
+    const container = document.getElementById('orbitasContainer');
     container.innerHTML = '';
 
+    // Ângulos para posicionar os planetas em círculo
+    const angulos = [0, 45, 90, 135, 180, 225, 270, 315];
+
     for (let i = 0; i < 8; i++) {
+        const orbita = document.createElement('div');
+        orbita.className = `orbita orbita-${i + 1}`;
+
         const slot = document.createElement('div');
         slot.className = 'slot';
         slot.dataset.posicao = i + 1;
         slot.innerHTML = `<span class="slot-numero">${i + 1}º</span>`;
 
+        // Posicionar slot no topo da órbita
+        const angulo = angulos[i] * (Math.PI / 180);
+        const raio = (40 + (i * 35)); // Raio progressivo
+        const x = Math.cos(angulo) * raio;
+        const y = Math.sin(angulo) * raio;
+
+        slot.style.position = 'absolute';
+        slot.style.left = `calc(50% + ${x}px)`;
+        slot.style.top = `calc(50% + ${y}px)`;
+        slot.style.transform = 'translate(-50%, -50%)';
+
         // Eventos de drop
         slot.addEventListener('dragover', arrastarSobre);
         slot.addEventListener('dragleave', arrastarSair);
         slot.addEventListener('drop', soltar);
+        slot.addEventListener('click', removerPlanetaDoSlot);
 
-        container.appendChild(slot);
+        orbita.appendChild(slot);
+        container.appendChild(orbita);
     }
 }
 
@@ -201,9 +220,15 @@ function soltar(e) {
 
     slot.classList.remove('drag-over');
 
-    // Verificar se o slot já está ocupado
-    if (slot.querySelector('.planeta')) {
-        return;
+    // Se o slot já está ocupado, devolver o planeta antigo para a área de planetas
+    const planetaExistente = slot.querySelector('.planeta');
+    if (planetaExistente) {
+        const containerPlanetas = document.getElementById('planetasContainer');
+        containerPlanetas.appendChild(planetaExistente);
+        planetaExistente.style.position = 'relative';
+        planetaExistente.style.left = 'auto';
+        planetaExistente.style.top = 'auto';
+        planetaExistente.style.transform = 'none';
     }
 
     const posicao = parseInt(slot.dataset.posicao);
@@ -212,6 +237,10 @@ function soltar(e) {
     // Mover planeta para o slot
     slot.appendChild(planetaArrastado);
     planetaArrastado.style.opacity = '1';
+    planetaArrastado.style.position = 'relative';
+    planetaArrastado.style.left = 'auto';
+    planetaArrastado.style.top = 'auto';
+    planetaArrastado.style.transform = 'none';
 
     // Registrar no array
     slotsPreenchidos[posicao - 1] = planetaId;
@@ -231,6 +260,27 @@ function soltar(e) {
 
     // Verificar vitória
     verificarVitoria();
+}
+
+// Remover Planeta do Slot (clique duplo ou botão direito)
+function removerPlanetaDoSlot(e) {
+    const slot = e.target.closest('.slot');
+    if (!slot) return;
+
+    const planeta = slot.querySelector('.planeta');
+    if (!planeta) return;
+
+    // Devolver para a área de planetas
+    const containerPlanetas = document.getElementById('planetasContainer');
+    containerPlanetas.appendChild(planeta);
+    planeta.style.position = 'relative';
+    planeta.style.left = 'auto';
+    planeta.style.top = 'auto';
+    planeta.style.transform = 'none';
+
+    // Limpar o registro
+    const posicao = parseInt(slot.dataset.posicao);
+    slotsPreenchidos[posicao - 1] = null;
 }
 
 // Cronômetro
@@ -303,7 +353,9 @@ function mostrarTelaVitoria(tempoFinal) {
     mostrarTela('telaVitoria');
 }
 
-// Sistema de Ranking
+// Sistema de Ranking (Permanente e Temporário)
+let tipoRankingAtual = 'permanente';
+
 function salvarRanking() {
     const nome = document.getElementById('nomeJogador').value.trim();
 
@@ -313,7 +365,6 @@ function salvarRanking() {
     }
 
     const tempoFinal = obterTempoFinal();
-    const ranking = carregarRanking();
 
     const novoRegistro = {
         nome: nome,
@@ -323,7 +374,19 @@ function salvarRanking() {
         data: new Date().toISOString()
     };
 
-    ranking.push(novoRegistro);
+    // Salvar em ambos os rankings
+    salvarEmRanking('permanente', novoRegistro);
+    salvarEmRanking('temporario', novoRegistro);
+
+    alert('Pontuação salva no ranking!');
+    mostrarRanking();
+}
+
+function salvarEmRanking(tipo, registro) {
+    const chave = tipo === 'permanente' ? 'rankingSolarPermanente' : 'rankingSolarTemporario';
+    const ranking = carregarRanking(tipo);
+
+    ranking.push(registro);
 
     // Ordenar por tempo (menor primeiro)
     ranking.sort((a, b) => a.tempo - b.tempo);
@@ -331,21 +394,53 @@ function salvarRanking() {
     // Manter apenas os 50 melhores
     const rankingLimitado = ranking.slice(0, 50);
 
-    localStorage.setItem('rankingSolar', JSON.stringify(rankingLimitado));
-
-    alert('Pontuação salva no ranking!');
-    mostrarRanking();
+    localStorage.setItem(chave, JSON.stringify(rankingLimitado));
 }
 
-function carregarRanking() {
-    const dados = localStorage.getItem('rankingSolar');
+function carregarRanking(tipo = tipoRankingAtual) {
+    const chave = tipo === 'permanente' ? 'rankingSolarPermanente' : 'rankingSolarTemporario';
+    const dados = localStorage.getItem(chave);
     return dados ? JSON.parse(dados) : [];
+}
+
+function alternarTipoRanking(tipo) {
+    tipoRankingAtual = tipo;
+
+    // Atualizar botões ativos
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('ativo');
+    });
+    event.target.classList.add('ativo');
+
+    // Mostrar/Ocultar botão limpar
+    const btnLimpar = document.getElementById('btnLimparContainer');
+    if (tipo === 'temporario') {
+        btnLimpar.style.display = 'block';
+    } else {
+        btnLimpar.style.display = 'none';
+    }
+
+    // Resetar filtro e mostrar ranking
+    document.querySelectorAll('.btn-filtro').forEach(btn => {
+        btn.classList.remove('ativo');
+    });
+    document.querySelector('.btn-filtro').classList.add('ativo');
+
+    mostrarRanking('todos');
+}
+
+function limparRankingTemporario() {
+    if (confirm('Tem certeza que deseja limpar todo o ranking temporário? Esta ação não pode ser desfeita!')) {
+        localStorage.removeItem('rankingSolarTemporario');
+        alert('Ranking temporário limpo com sucesso!');
+        mostrarRanking('todos');
+    }
 }
 
 function mostrarRanking(filtro = 'todos') {
     mostrarTela('telaRanking');
 
-    let ranking = carregarRanking();
+    let ranking = carregarRanking(tipoRankingAtual);
 
     // Filtrar por challenge
     if (filtro !== 'todos') {
