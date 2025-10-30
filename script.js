@@ -761,6 +761,9 @@ function mostrarTelaVitoria(tempoFinal) {
 
     document.getElementById('mensagemChallenge').textContent = mensagem;
 
+    // Limpar campo de nome para novo jogo
+    document.getElementById('nomeJogador').value = '';
+
     mostrarTela('telaVitoria');
 }
 
@@ -791,6 +794,9 @@ function desistirJogo() {
     document.getElementById('errosFinal').textContent = erros;
     document.getElementById('pontosFinal').textContent = pontos;
     document.getElementById('mensagemChallenge').textContent = `⚠️ Jogo incompleto: ${planetasCorretos}/8 planetas corretos`;
+
+    // Limpar campo de nome para novo jogo
+    document.getElementById('nomeJogador').value = '';
 
     mostrarTela('telaVitoria');
 }
