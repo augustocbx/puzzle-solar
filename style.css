@@ -454,6 +454,10 @@ body {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
+.area-slots {
+    overflow: visible;
+}
+
 .area-planetas {
     display: flex;
     flex-direction: column;
@@ -577,6 +581,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: visible;
 }
 
 @media (min-width: 1600px) {
@@ -624,11 +629,11 @@ body {
     left: 50%;
     --angulo-inicial: 0deg;
     transform: translate(-50%, -50%) rotate(var(--angulo-inicial));
-    border: 2px dashed rgba(255, 255, 255, 0.35);
+    border: 2px dashed rgba(255, 255, 255, 0.6);
     border-radius: 50%;
     transition: all 0.3s ease;
     animation: rotar linear infinite;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
     pointer-events: none;
 }
 
@@ -1229,8 +1234,6 @@ body {
 
     .area-slots {
         order: 1;
-        overflow: auto;
-        max-height: 90vh;
     }
 
     .area-planetas {

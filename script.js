@@ -414,11 +414,19 @@ function criarSlots() {
     // Detectar tamanho do sistema solar e calcular raios proporcionalmente
     const sistemaSolar = document.querySelector('.sistema-solar');
     const tamanhoSistema = sistemaSolar ? sistemaSolar.offsetWidth : 800;
-    const fatorEscala = tamanhoSistema / 800; // 800 é o tamanho base
 
     // Raios das órbitas (do Sol para fora) - ajustados dinamicamente
-    const raiosBase = [60, 90, 120, 150, 190, 230, 270, 310];
-    const raios = raiosBase.map(r => Math.round(r * fatorEscala));
+    // Calculados como porcentagem do tamanho do sistema (de 13% a 61%)
+    const raios = [
+        Math.round(tamanhoSistema * 0.13),  // Mercúrio - 13%
+        Math.round(tamanhoSistema * 0.18),  // Vênus - 18%
+        Math.round(tamanhoSistema * 0.23),  // Terra - 23%
+        Math.round(tamanhoSistema * 0.29),  // Marte - 29%
+        Math.round(tamanhoSistema * 0.37),  // Júpiter - 37%
+        Math.round(tamanhoSistema * 0.45),  // Saturno - 45%
+        Math.round(tamanhoSistema * 0.53),  // Urano - 53%
+        Math.round(tamanhoSistema * 0.61)   // Netuno - 61% (deixa margem de 39%)
+    ];
 
     // Ângulos iniciais variados para cada órbita (em graus)
     const angulosIniciais = [0, 45, 120, 200, 280, 330, 90, 170];
