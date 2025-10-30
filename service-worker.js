@@ -1,11 +1,11 @@
-const CACHE_NAME = 'puzzle-solar-v25';
+const CACHE_NAME = 'puzzle-solar-v26';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/planetas.js',
-  '/manifest.json'
+  './',
+  './index.html',
+  './style.css',
+  './script.js',
+  './planetas.js',
+  './manifest.json'
 ];
 
 // Instalação do Service Worker
