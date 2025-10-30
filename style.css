@@ -261,12 +261,22 @@ body {
 .urano { background: linear-gradient(135deg, #7cb3d9, #a8d0e6); }
 .netuno { background: linear-gradient(135deg, #4a6fa5, #6a8fc7); }
 
-/* Área dos Slots */
+/* Sistema Solar com Órbitas */
+.sistema-solar {
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .sol {
-    font-size: 5em;
-    text-align: center;
-    margin-bottom: 20px;
-    animation: rotate 20s linear infinite;
+    font-size: 4em;
+    position: absolute;
+    z-index: 10;
+    animation: rotate 20s linear infinite, pulse-sol 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
 }
 
 @keyframes rotate {
@@ -274,60 +284,111 @@ body {
     to { transform: rotate(360deg); }
 }
 
-.slots-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+@keyframes pulse-sol {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(180deg); }
 }
 
+.orbitas-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+}
+
+.orbita {
+    position: absolute;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.orbita:hover {
+    border-color: rgba(255, 215, 0, 0.6);
+    border-style: solid;
+}
+
+/* Tamanhos progressivos das órbitas */
+.orbita.orbita-1 { width: 80px; height: 80px; }
+.orbita.orbita-2 { width: 120px; height: 120px; }
+.orbita.orbita-3 { width: 160px; height: 160px; }
+.orbita.orbita-4 { width: 200px; height: 200px; }
+.orbita.orbita-5 { width: 280px; height: 280px; }
+.orbita.orbita-6 { width: 360px; height: 360px; }
+.orbita.orbita-7 { width: 440px; height: 440px; }
+.orbita.orbita-8 { width: 520px; height: 520px; }
+
 .slot {
-    min-height: 100px;
+    min-height: 80px;
+    min-width: 80px;
     border: 3px dashed rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
 }
 
 .slot.drag-over {
     background: rgba(255, 255, 255, 0.3);
     border-color: #ffd93d;
-    transform: scale(1.05);
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
 }
 
 .slot.correto {
     border-color: #4caf50;
-    background: rgba(76, 175, 80, 0.2);
-    animation: pulse 0.5s ease;
+    background: rgba(76, 175, 80, 0.3);
+    animation: pulse-correto 0.6s ease;
+    border-style: solid;
 }
 
 .slot.incorreto {
     border-color: #f44336;
-    background: rgba(244, 67, 54, 0.2);
+    background: rgba(244, 67, 54, 0.3);
     animation: shake 0.5s ease;
 }
 
-@keyframes pulse {
+@keyframes pulse-correto {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.3); box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); }
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(-10px) rotate(-5deg); }
+    75% { transform: translateX(10px) rotate(5deg); }
 }
 
 .slot-numero {
     position: absolute;
-    top: 5px;
-    left: 10px;
-    font-size: 1.2em;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1em;
     font-weight: bold;
     color: #ffd93d;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 10px;
+    border-radius: 10px;
+}
+
+.slot .planeta {
+    width: 70px;
+    height: 70px;
+    cursor: move;
+}
+
+.slot .planeta:hover {
+    transform: scale(1.1);
 }
 
 /* Modal de Vitória */
@@ -449,6 +510,63 @@ body {
     font-size: 3em;
     margin-bottom: 30px;
     color: #ffd93d;
+}
+
+/* Tabs de Ranking */
+.tabs-ranking {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-btn {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.tab-btn:hover {
+    transform: translateY(-3px);
+    border-color: #ffd93d;
+}
+
+.tab-btn.ativo {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: #667eea;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* Botão Limpar */
+.btn-limpar-container {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.btn-limpar {
+    padding: 12px 25px;
+    font-size: 1em;
+    border: 2px solid rgba(244, 67, 54, 0.5);
+    border-radius: 15px;
+    background: rgba(244, 67, 54, 0.2);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-limpar:hover {
+    background: rgba(244, 67, 54, 0.4);
+    transform: scale(1.05);
+    border-color: #f44336;
 }
 
 .filtros-ranking {

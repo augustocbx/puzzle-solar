@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a0e27">
+    <meta name="description" content="Jogo educativo sobre o Sistema Solar - Organize os planetas na ordem correta!">
     <title>Puzzle do Sistema Solar 🪐</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -41,11 +50,13 @@
                 <div class="planetas-container" id="planetasContainer"></div>
             </div>
 
-            <!-- Área dos Slots (Sistema Solar) -->
+            <!-- Área dos Slots (Sistema Solar com Órbitas) -->
             <div class="area-slots">
-                <h3>Para a ordem correta:</h3>
-                <div class="sol">☀️</div>
-                <div class="slots-container" id="slotsContainer"></div>
+                <h3>Monte o Sistema Solar:</h3>
+                <div class="sistema-solar">
+                    <div class="sol">☀️</div>
+                    <div class="orbitas-container" id="orbitasContainer"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -71,6 +82,19 @@
     <div id="telaRanking" class="tela">
         <div class="container-ranking">
             <h1>🏆 Ranking 🏆</h1>
+
+            <!-- Abas de Ranking -->
+            <div class="tabs-ranking">
+                <button class="tab-btn ativo" onclick="alternarTipoRanking('permanente')">🏅 Permanente</button>
+                <button class="tab-btn" onclick="alternarTipoRanking('temporario')">⏳ Temporário</button>
+            </div>
+
+            <!-- Botão Limpar (só aparece no temporário) -->
+            <div id="btnLimparContainer" class="btn-limpar-container" style="display: none;">
+                <button class="btn-limpar" onclick="limparRankingTemporario()">🗑️ Limpar Ranking Temporário</button>
+            </div>
+
+            <!-- Filtros -->
             <div class="filtros-ranking">
                 <button class="btn-filtro ativo" onclick="filtrarRanking('todos')">Todos</button>
                 <button class="btn-filtro" onclick="filtrarRanking('classico')">Clássico</button>
@@ -78,6 +102,7 @@
                 <button class="btn-filtro" onclick="filtrarRanking('precisao')">Precisão</button>
                 <button class="btn-filtro" onclick="filtrarRanking('memoria')">Memória</button>
             </div>
+
             <div id="listaRanking" class="lista-ranking"></div>
             <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
         </div>
@@ -93,5 +118,15 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Registrar Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registrado!', reg))
+                    .catch(err => console.log('Erro ao registrar Service Worker:', err));
+            });
+        }
+    </script>
 </body>
 </html>
