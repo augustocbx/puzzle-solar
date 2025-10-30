@@ -21,6 +21,22 @@
     <div class="stars2"></div>
     <div class="stars3"></div>
 
+    <!-- QR Code Flutuante Pequeno -->
+    <div id="qr-toggle-btn" class="qr-floating-small" title="Clique para ampliar QR Code">
+        <div id="qrcode-small" class="qr-small-container"></div>
+    </div>
+
+    <!-- Modal do QR Code -->
+    <div id="qr-modal" class="qr-modal">
+        <div class="qr-modal-content">
+            <button class="qr-modal-close" id="qr-modal-close">×</button>
+            <h2 class="qr-modal-title">🚀 Compartilhe o Jogo</h2>
+            <p class="qr-modal-subtitle">Aponte a câmera do celular para acessar</p>
+            <div id="qrcode" class="qr-code-container"></div>
+            <div class="qr-modal-url" id="qr-modal-url">https://augustocbx.github.io/puzzle-solar/</div>
+        </div>
+    </div>
+
     <!-- Tela Inicial -->
     <div id="telaInicial" class="tela ativa">
         <div class="container-inicial">
@@ -220,6 +236,9 @@
         </div>
     </div>
 
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script src="planetas.js"></script>
     <script src="script.js"></script>
     <script>
@@ -296,6 +315,59 @@
                 swWaiting.postMessage({ type: 'SKIP_WAITING' });
             }
         }
+
+        // ==================== QR CODE GENERATOR ====================
+
+        const qrModal = document.getElementById('qr-modal');
+        const qrToggleBtn = document.getElementById('qr-toggle-btn');
+        const qrModalClose = document.getElementById('qr-modal-close');
+        const qrcodeElement = document.getElementById('qrcode');
+        const qrcodeSmallElement = document.getElementById('qrcode-small');
+        const qrUrl = 'https://augustocbx.github.io/puzzle-solar/';
+        let qrCodeLargeGenerated = false;
+
+        // Gerar QR code pequeno flutuante
+        if (qrcodeSmallElement && typeof QRCode !== 'undefined') {
+            new QRCode(qrcodeSmallElement, {
+                text: qrUrl,
+                width: 80,
+                height: 80,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Abrir modal do QR Code
+        qrToggleBtn.addEventListener('click', function() {
+            qrModal.style.display = 'flex';
+
+            // Gerar QR code grande apenas uma vez
+            if (!qrCodeLargeGenerated && typeof QRCode !== 'undefined') {
+                qrcodeElement.innerHTML = '';
+                new QRCode(qrcodeElement, {
+                    text: qrUrl,
+                    width: 256,
+                    height: 256,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+                qrCodeLargeGenerated = true;
+            }
+        });
+
+        // Fechar modal do QR Code
+        qrModalClose.addEventListener('click', function() {
+            qrModal.style.display = 'none';
+        });
+
+        // Fechar modal ao clicar fora
+        qrModal.addEventListener('click', function(e) {
+            if (e.target === qrModal) {
+                qrModal.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
