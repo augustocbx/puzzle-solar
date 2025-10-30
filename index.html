@@ -89,7 +89,12 @@
                 <p id="mensagemChallenge" class="mensagem-challenge"></p>
             </div>
             <form onsubmit="event.preventDefault(); salvarRanking(); return false;" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20" autocomplete="off">
+                <div class="input-nome-container">
+                    <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20" autocomplete="off" oninput="atualizarBotaoNomeAleatorio()">
+                    <button type="button" class="btn-nome-aleatorio" id="btnNomeAleatorio" onclick="gerarNomeAleatorio()" title="Gerar nome aleatório">
+                        🎲
+                    </button>
+                </div>
                 <button type="submit" class="btn-principal">Salvar no Ranking</button>
             </form>
             <button class="btn-secundario" onclick="jogarNovamente()">Jogar Novamente</button>

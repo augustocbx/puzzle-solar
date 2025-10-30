@@ -230,6 +230,23 @@ const badges = [
     }
 ];
 
+// Lista de Nomes Espaciais Aleatórios
+const nomesEspaciais = [
+    'Armstrong', 'Aldrin', 'Gagarin', 'Tereshkova', 'Shepard', 'Glenn', 'Collins', 'Lovell',
+    'Cernan', 'Duke', 'Bean', 'Conrad', 'Scott', 'Irwin', 'Young', 'Mitchell',
+    'Hubble', 'Sagan', 'Hawking', 'Einstein', 'Newton', 'Galileu', 'Kepler', 'Copérnico',
+    'Tycho', 'Halley', 'Herschel', 'Lowell', 'Cassini', 'Huygens', 'Voyager', 'Pioneer',
+    'Apollo', 'Gemini', 'Mercury', 'Skylab', 'Soyuz', 'Orion', 'Artemis', 'Discovery',
+    'Endeavour', 'Atlantis', 'Columbia', 'Challenger', 'Enterprise', 'Pathfinder', 'Spirit', 'Opportunity',
+    'Curiosity', 'Perseverance', 'Ingenuity', 'Juno', 'Cassini', 'Galileo', 'Magellan', 'Viking',
+    'Nebulosa', 'Quasar', 'Pulsar', 'Supernova', 'Cosmos', 'Astro', 'Stellar', 'Lunar',
+    'Solar', 'Estelar', 'Orbital', 'Galático', 'Sirius', 'Vega', 'Altair', 'Deneb',
+    'Rigel', 'Betelgeuse', 'Antares', 'Polaris', 'Arcturus', 'Aldebaran', 'Spica', 'Regulus',
+    'Andrômeda', 'Orion', 'Cassiopeia', 'Pegasus', 'Lyra', 'Aquila', 'Cygnus', 'Phoenix',
+    'Draco', 'Centaurus', 'Hydra', 'Perseus', 'Auriga', 'Bootes', 'Corvus', 'Crater',
+    'Kosmos', 'Astral', 'Celeste', 'Zenith'
+];
+
 // Variáveis do Jogo
 let jogoAtivo = false;
 let tempoInicio = 0;
@@ -1671,6 +1688,40 @@ function mostrarDetalhesBadge(badgeId) {
 function fecharModalBadge(event) {
     if (!event || event.target.id === 'modalDetalhesBadge' || event.target.classList.contains('btn-fechar-modal')) {
         document.getElementById('modalDetalhesBadge').classList.remove('ativo');
+    }
+}
+
+// ==================== GERADOR DE NOME ALEATÓRIO ====================
+
+// Gerar Nome Aleatório
+function gerarNomeAleatorio() {
+    const nomeAleatorio = nomesEspaciais[Math.floor(Math.random() * nomesEspaciais.length)];
+    const inputNome = document.getElementById('nomeJogador');
+    inputNome.value = nomeAleatorio;
+
+    // Atualizar estado do botão
+    atualizarBotaoNomeAleatorio();
+
+    // Focar no input para o usuário ver a mudança
+    inputNome.focus();
+}
+
+// Atualizar Estado do Botão de Nome Aleatório
+function atualizarBotaoNomeAleatorio() {
+    const inputNome = document.getElementById('nomeJogador');
+    const botao = document.getElementById('btnNomeAleatorio');
+
+    if (!botao) return; // Se o botão não existir, sair
+
+    // Desabilitar se tiver texto, habilitar se estiver vazio
+    if (inputNome.value.trim() === '') {
+        botao.disabled = false;
+        botao.style.opacity = '1';
+        botao.style.cursor = 'pointer';
+    } else {
+        botao.disabled = true;
+        botao.style.opacity = '0.5';
+        botao.style.cursor = 'not-allowed';
     }
 }
 
