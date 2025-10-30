@@ -222,9 +222,9 @@ const badges = [
         icone: '🌌',
         categoria: 'especial',
         verificar: (stats) => {
-            const badgesDesbloqueados = carregarBadges();
+            const badgesDesbloqueados = carregarBadgesGlobais();
             const totalBadges = badges.filter(b => b.id !== 'todos-badges').length;
-            const desbloqueados = Object.values(badgesDesbloqueados).filter(v => v === true).length;
+            const desbloqueados = Object.keys(badgesDesbloqueados).length;
             return desbloqueados >= totalBadges;
         }
     }
