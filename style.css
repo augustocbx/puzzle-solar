@@ -1251,8 +1251,8 @@ body {
     }
 
     .progresso-container {
-        margin: 0 auto 8px;
-        padding: 0 20px;
+        margin: 0 auto 2px;
+        padding: 0 15px;
     }
 
     .progresso-texto {
@@ -1260,7 +1260,7 @@ body {
     }
 
     .progresso-barra {
-        height: 4px;
+        height: 3px;
     }
 
     .mensagem-motivacional {
@@ -1320,12 +1320,12 @@ body {
     }
 
     .progresso-container {
-        margin: 0 auto 6px;
-        padding: 0 15px;
+        margin: 0 auto 2px;
+        padding: 0 10px;
     }
 
     .progresso-barra {
-        height: 3px;
+        height: 2px;
     }
 
     .area-jogo {
@@ -1397,12 +1397,12 @@ body {
     }
 
     .progresso-container {
-        margin: 0 auto 5px;
-        padding: 0 10px;
+        margin: 0 auto 2px;
+        padding: 0 8px;
     }
 
     .progresso-barra {
-        height: 3px;
+        height: 2px;
     }
 
     .mensagem-motivacional {
@@ -1549,8 +1549,8 @@ body {
 
 @media (max-width: 500px) {
     .progresso-container {
-        margin: 0 auto 4px;
-        padding: 0 8px;
+        margin: 0 auto 1px;
+        padding: 0 5px;
     }
 
     .progresso-barra {
