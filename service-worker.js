@@ -1,4 +1,4 @@
-const CACHE_NAME = 'puzzle-solar-v23';
+const CACHE_NAME = 'puzzle-solar-v24';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -18,6 +18,14 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
   );
+});
+
+// Ouvir mensagem para pular espera
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('Service Worker: Pulando espera e ativando nova versão...');
+    self.skipWaiting();
+  }
 });
 
 // Ativação do Service Worker

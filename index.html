@@ -207,16 +207,94 @@
         </div>
     </div>
 
+    <!-- Banner de Atualização Disponível -->
+    <div id="bannerAtualizacao" class="banner-atualizacao">
+        <div class="banner-conteudo">
+            <span class="banner-icone">🚀</span>
+            <div class="banner-texto">
+                <strong>Nova versão disponível!</strong>
+                <p>Clique para atualizar e aproveitar as novidades</p>
+            </div>
+            <button class="btn-atualizar" onclick="atualizarApp()">Atualizar</button>
+            <button class="btn-fechar-banner" onclick="fecharBannerAtualizacao()">✕</button>
+        </div>
+    </div>
+
     <script src="planetas.js"></script>
     <script src="script.js"></script>
     <script>
+        // ==================== SERVICE WORKER E ATUALIZAÇÃO AUTOMÁTICA ====================
+
+        let swRegistration = null;
+        let swWaiting = null;
+
         // Registrar Service Worker para PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('Service Worker registrado!', reg))
+                    .then(reg => {
+                        console.log('Service Worker registrado!', reg);
+                        swRegistration = reg;
+
+                        // Verificar se há uma atualização esperando
+                        if (reg.waiting) {
+                            swWaiting = reg.waiting;
+                            mostrarBannerAtualizacao();
+                        }
+
+                        // Verificar atualizações a cada 30 segundos
+                        setInterval(() => {
+                            reg.update();
+                        }, 30000);
+
+                        // Ouvir mudanças de estado
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // Nova versão disponível!
+                                    swWaiting = newWorker;
+                                    mostrarBannerAtualizacao();
+                                }
+                            });
+                        });
+                    })
                     .catch(err => console.log('Erro ao registrar Service Worker:', err));
+
+                // Ouvir quando o novo service worker assume o controle
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                });
             });
+        }
+
+        // Mostrar Banner de Atualização
+        function mostrarBannerAtualizacao() {
+            const banner = document.getElementById('bannerAtualizacao');
+            if (banner) {
+                banner.classList.add('ativo');
+            }
+        }
+
+        // Fechar Banner
+        function fecharBannerAtualizacao() {
+            const banner = document.getElementById('bannerAtualizacao');
+            if (banner) {
+                banner.classList.remove('ativo');
+            }
+        }
+
+        // Atualizar App
+        function atualizarApp() {
+            if (swWaiting) {
+                // Enviar mensagem para o service worker pular a espera
+                swWaiting.postMessage({ type: 'SKIP_WAITING' });
+            }
         }
     </script>
 </body>
