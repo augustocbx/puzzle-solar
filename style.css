@@ -379,18 +379,19 @@ body {
 .sol {
     font-size: 5em;
     margin-bottom: 30px;
-    animation: rotate 20s linear infinite, pulse-sol 2s ease-in-out infinite;
+    animation: pulse-sol 3s ease-in-out infinite;
     filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
 }
 
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
 @keyframes pulse-sol {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.1) rotate(180deg); }
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+    }
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 50px rgba(255, 215, 0, 1));
+    }
 }
 
 .orbitas-container {
