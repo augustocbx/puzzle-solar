@@ -40,8 +40,20 @@
                 <span class="challenge-atual" id="challengeAtual">Modo Clássico</span>
                 <span class="cronometro" id="cronometro">⏱️ 00:00</span>
                 <span class="tentativas" id="tentativas">❌ Erros: 0</span>
+                <span class="pontos" id="pontos">⭐ 0 pontos</span>
             </div>
         </div>
+
+        <!-- Barra de Progresso -->
+        <div class="progresso-container">
+            <div class="progresso-texto">Progresso: <span id="progressoTexto">0/8</span></div>
+            <div class="progresso-barra">
+                <div class="progresso-preenchimento" id="progressoPreenchimento"></div>
+            </div>
+        </div>
+
+        <!-- Mensagem Motivacional -->
+        <div class="mensagem-motivacional" id="mensagemMotivacional"></div>
 
         <div class="area-jogo">
             <!-- Área dos Planetas Embaralhados -->
@@ -70,6 +82,7 @@
             <div class="estatisticas">
                 <p>⏱️ Tempo: <span id="tempoFinal">00:00</span></p>
                 <p>❌ Erros: <span id="errosFinal">0</span></p>
+                <p>⭐ Pontos: <span id="pontosFinal">0</span></p>
                 <p id="mensagemChallenge" class="mensagem-challenge"></p>
             </div>
             <input type="text" id="nomeJogador" placeholder="Digite seu nome" maxlength="20">

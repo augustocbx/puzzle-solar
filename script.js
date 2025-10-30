@@ -72,9 +72,23 @@ let jogoAtivo = false;
 let tempoInicio = 0;
 let cronometroInterval = null;
 let erros = 0;
+let pontos = 0;
+let acertos = 0;
 let challengeAtual = 'classico';
 let planetasEmbaralhados = [];
 let slotsPreenchidos = new Array(8).fill(null);
+
+// Mensagens Motivacionais
+const mensagensMotivacionais = [
+    '🌟 Ótimo trabalho!',
+    '⭐ Incrível!',
+    '🎯 Perfeito!',
+    '✨ Você é um gênio espacial!',
+    '🚀 Excelente!',
+    '💫 Mandou bem!',
+    '🌠 Fantástico!',
+    '🎉 Isso aí!'
+];
 
 // Navegação entre Telas
 function mostrarTela(nomeTela) {
@@ -93,6 +107,8 @@ function voltarInicio() {
 function iniciarJogo(challengeId = 'classico') {
     challengeAtual = challengeId;
     erros = 0;
+    pontos = 0;
+    acertos = 0;
     slotsPreenchidos = new Array(8).fill(null);
     jogoAtivo = true;
 
@@ -102,6 +118,10 @@ function iniciarJogo(challengeId = 'classico') {
     const challenge = challenges.find(c => c.id === challengeId);
     document.getElementById('challengeAtual').textContent = challenge.nome;
     document.getElementById('tentativas').textContent = `❌ Erros: 0`;
+    document.getElementById('pontos').textContent = `⭐ 0 pontos`;
+
+    // Resetar progresso
+    atualizarProgresso();
 
     // Embaralhar e criar planetas
     criarPlanetas();
@@ -249,10 +269,26 @@ function soltar(e) {
     if (planetaId === posicao) {
         slot.classList.add('correto');
         setTimeout(() => slot.classList.remove('correto'), 500);
+
+        // Acertou!
+        acertos++;
+        pontos += 100;
+        document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+
+        // Mostrar mensagem motivacional
+        mostrarMensagemMotivacional();
+
+        // Criar partículas de celebração
+        criarParticulas(slot);
+
+        // Atualizar progresso
+        atualizarProgresso();
     } else {
         slot.classList.add('incorreto');
         erros++;
+        pontos = Math.max(0, pontos - 20); // Perde 20 pontos, mas não fica negativo
         document.getElementById('tentativas').textContent = `❌ Erros: ${erros}`;
+        document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
         setTimeout(() => slot.classList.remove('incorreto'), 500);
     }
 
@@ -262,7 +298,62 @@ function soltar(e) {
     verificarVitoria();
 }
 
-// Remover Planeta do Slot (clique duplo ou botão direito)
+// Mostrar Mensagem Motivacional
+function mostrarMensagemMotivacional() {
+    const mensagem = mensagensMotivacionais[Math.floor(Math.random() * mensagensMotivacionais.length)];
+    const elemento = document.getElementById('mensagemMotivacional');
+    elemento.textContent = mensagem;
+
+    // Remover após 2 segundos
+    setTimeout(() => {
+        elemento.textContent = '';
+    }, 2000);
+}
+
+// Criar Partículas de Celebração
+function criarParticulas(elemento) {
+    const rect = elemento.getBoundingClientRect();
+    const particulas = ['✨', '⭐', '🌟', '💫', '🎉'];
+
+    for (let i = 0; i < 5; i++) {
+        const particula = document.createElement('div');
+        particula.textContent = particulas[Math.floor(Math.random() * particulas.length)];
+        particula.style.position = 'fixed';
+        particula.style.left = rect.left + rect.width / 2 + 'px';
+        particula.style.top = rect.top + rect.height / 2 + 'px';
+        particula.style.fontSize = '2em';
+        particula.style.pointerEvents = 'none';
+        particula.style.zIndex = '9999';
+        particula.style.transition = 'all 1s ease-out';
+
+        document.body.appendChild(particula);
+
+        // Animar
+        setTimeout(() => {
+            const angulo = (Math.PI * 2 * i) / 5;
+            const distancia = 100;
+            particula.style.transform = `translate(${Math.cos(angulo) * distancia}px, ${Math.sin(angulo) * distancia}px)`;
+            particula.style.opacity = '0';
+        }, 10);
+
+        // Remover após animação
+        setTimeout(() => {
+            document.body.removeChild(particula);
+        }, 1000);
+    }
+}
+
+// Atualizar Progresso
+function atualizarProgresso() {
+    const total = 8;
+    const corretos = slotsPreenchidos.filter((id, index) => id === index + 1).length;
+    const percentual = (corretos / total) * 100;
+
+    document.getElementById('progressoTexto').textContent = `${corretos}/${total}`;
+    document.getElementById('progressoPreenchimento').style.width = `${percentual}%`;
+}
+
+// Remover Planeta do Slot (clique no slot vazio)
 function removerPlanetaDoSlot(e) {
     const slot = e.target.closest('.slot');
     if (!slot) return;
@@ -280,7 +371,19 @@ function removerPlanetaDoSlot(e) {
 
     // Limpar o registro
     const posicao = parseInt(slot.dataset.posicao);
+    const planetaId = slotsPreenchidos[posicao - 1];
+
+    // Se era correto, descontar pontos e acertos
+    if (planetaId === posicao) {
+        acertos--;
+        pontos = Math.max(0, pontos - 50);
+        document.getElementById('pontos').textContent = `⭐ ${pontos} pontos`;
+    }
+
     slotsPreenchidos[posicao - 1] = null;
+
+    // Atualizar progresso
+    atualizarProgresso();
 }
 
 // Cronômetro
@@ -336,8 +439,18 @@ function mostrarTelaVitoria(tempoFinal) {
     const segundos = tempoFinal % 60;
     const tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
 
+    // Bônus de tempo: quanto mais rápido, mais pontos
+    const bonusTempo = Math.max(0, 300 - tempoFinal) * 5; // Max 1500 pontos se completar em 0s
+    pontos += bonusTempo;
+
+    // Bônus de precisão: sem erros ganha bônus
+    if (erros === 0) {
+        pontos += 500;
+    }
+
     document.getElementById('tempoFinal').textContent = tempoFormatado;
     document.getElementById('errosFinal').textContent = erros;
+    document.getElementById('pontosFinal').textContent = pontos;
 
     // Verificar se completou o challenge
     const challenge = challenges.find(c => c.id === challengeAtual);
