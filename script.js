@@ -1754,18 +1754,22 @@ function gerarNomeAleatorio() {
 function atualizarBotaoNomeAleatorio() {
     const inputNome = document.getElementById('nomeJogador');
     const botao = document.getElementById('btnNomeAleatorio');
+    const botaoIcone = document.getElementById('btnIconeSelecionado');
 
     if (!botao) return; // Se o botão não existir, sair
 
-    // Desabilitar se tiver texto, habilitar se estiver vazio
-    if (inputNome.value.trim() === '') {
-        botao.disabled = false;
-        botao.style.opacity = '1';
-        botao.style.cursor = 'pointer';
-    } else {
-        botao.disabled = true;
-        botao.style.opacity = '0.5';
-        botao.style.cursor = 'not-allowed';
+    // LÓGICA CORRIGIDA:
+    // - Se o campo está VAZIO: habilitar ambos os botões (ícone e nome aleatório)
+    // - Se o campo TEM TEXTO: habilitar ambos os botões (usuário pode trocar)
+    // Portanto, os botões devem SEMPRE estar habilitados
+    botao.disabled = false;
+    botao.style.opacity = '1';
+    botao.style.cursor = 'pointer';
+
+    if (botaoIcone) {
+        botaoIcone.disabled = false;
+        botaoIcone.style.opacity = '1';
+        botaoIcone.style.cursor = 'pointer';
     }
 }
 
