@@ -13,6 +13,9 @@ body {
     overflow-x: hidden;
     min-height: 100vh;
     position: relative;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 /* Animação de Estrelas */
